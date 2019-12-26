@@ -1,0 +1,10 @@
+
+<h1>User details</h1>
+
+<dl>
+  <dt>Username</dt>
+  <dd><%= @client.name %></dd>
+  <dt>Email address</dt>
+  <dd><%= @client.cid %></dd>
+</dl>
+

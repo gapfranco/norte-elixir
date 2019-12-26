@@ -1,0 +1,31 @@
+defmodule NorteWeb.Api.UserView do
+  use NorteWeb, :view
+  alias NorteWeb.Api.UserView
+
+  def render("index.json", %{users: users}) do
+    %{data: render_many(users, UserView, "user.json")}
+  end
+
+  def render("show.json", %{user: user}) do
+    %{data: render_one(user, UserView, "user.json")}
+  end
+
+  def render("user.json", %{user: user}) do
+    %{
+      id: user.id,
+      uid: user.uid,
+      username: user.username,
+      email: user.email,
+      password_hash: user.password_hash,
+      expired: user.expired,
+      admin: user.admin,
+      block: user.block,
+      token: user.token,
+      token_date: user.token_date
+    }
+  end
+
+  def render("jwt.json", %{jwt: jwt}) do
+    %{jwt: jwt}
+  end
+end

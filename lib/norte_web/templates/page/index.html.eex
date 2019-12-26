@@ -1,0 +1,5 @@
+<section class="phx-hero">
+  <h1><%= gettext "Bem vindo ao %{name}!", name: "Norte" %></h1>
+  <p>Uma bússola indicando se sua empresa está na direção certa.</p>
+</section>
+
