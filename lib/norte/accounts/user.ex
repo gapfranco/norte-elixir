@@ -1,6 +1,7 @@
 defmodule Norte.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Norte.Password
 
   schema "users" do
     field :admin, :boolean, default: false
@@ -21,7 +22,7 @@ defmodule Norte.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:uid, :username, :email, :client_id])
+    |> cast(attrs, [:uid, :username, :email, :client_id, :token, :token_date, :expired, :block])
     |> validate_required([:uid, :username, :email, :client_id, :password_hash])
     |> validate_length(:uid, min: 3, max: 20)
     |> validate_length(:username, min: 3, max: 200)
@@ -40,7 +41,7 @@ defmodule Norte.Accounts.User do
 
   defp hash_password(%Ecto.Changeset{changes: %{password: password}} = changeset) do
     changeset
-    |> put_change(:password_hash, Norte.Password.hash(password))
+    |> put_change(:password_hash, Password.hash(password))
   end
 
   defp hash_password(changeset), do: changeset

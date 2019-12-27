@@ -1,21 +1,21 @@
 use Mix.Config
 
 # Configure your database
-# config :norte, Norte.Repo,
-#   username: "gapfranco",
-#   password: "",
-#   database: "norte_dev",
-#   hostname: "localhost",
-#   show_sensitive_data_on_connection_error: true,
-#   pool_size: 10
-
 config :norte, Norte.Repo,
-  username: "postgres",
-  password: "area51",
+  username: "gapfranco",
+  password: "",
   database: "norte_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
+
+# config :norte, Norte.Repo,
+#   username: "postgres",
+#   password: "area51",
+#   database: "norte_dev",
+#   hostname: "localhost",
+#   show_sensitive_data_on_connection_error: true,
+#   pool_size: 10
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -82,3 +82,19 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# config :norte, Norte.Mailer, adapter: Bamboo.LocalAdapter
+
+config :norte, Norte.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp.mailtrap.io",
+  hostname: "smtp.mailtrap.io",
+  port: 2525,
+  username: "52de807602f1c8",
+  password: "da2a9dc063dcaa",
+  tls: :if_available,
+  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"],
+  ssl: false,
+  retries: 1,
+  no_mx_lookups: false,
+  auth: :allways

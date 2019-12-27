@@ -18,6 +18,11 @@ defmodule NorteWeb.Router do
     plug Guardian.AuthPipeline
   end
 
+  if Mix.env() == :dev do
+    # If using Phoenix
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
+  end
+
   scope "/", NorteWeb do
     pipe_through :browser
 
@@ -30,6 +35,8 @@ defmodule NorteWeb.Router do
     pipe_through :api
     post "/signup", ClientController, :sign_up
     post "/signin", UserController, :sign_in
+    post "/password", UserController, :forgot_password
+    put "/password", UserController, :create_password
   end
 
   scope "/api", NorteWeb.Api do

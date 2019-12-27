@@ -4,6 +4,7 @@ defmodule NorteWeb.Api.UserController do
   alias Norte.Accounts
   alias Norte.Accounts.User
   alias Norte.Password
+  alias Norte.{Email, Mailer}
 
   action_fallback NorteWeb.FallbackController
 
@@ -17,15 +18,53 @@ defmodule NorteWeb.Api.UserController do
     end
   end
 
+  def forgot_password(conn, %{"uid" => uid}) do
+    user = Accounts.get_user_uid(uid)
+    client = Accounts.get_client(user.client_id)
+
+    token =
+      :crypto.strong_rand_bytes(10)
+      |> Base.url_encode64()
+      |> binary_part(0, 10)
+      |> String.downcase()
+
+    date = DateTime.utc_now() |> DateTime.add(2 * 60 * 60 * 24)
+    Accounts.update_user(user, %{token: token, token_date: date})
+    Email.forgot_password_email(user.email, uid, client.cid, token) |> Mailer.deliver_now()
+    send_resp(conn, :no_content, "")
+    # render(conn, "token.json", token: token)
+  end
+
+  def create_password(conn, %{"uid" => uid, "token" => token, "password" => password}) do
+    user = Accounts.get_user_uid(uid)
+    date = DateTime.utc_now()
+
+    if user.token == token and user.token_date >= date do
+      case Accounts.update_user_with_password(user, %{
+             password: password,
+             password_confirmation: password,
+             expired: false,
+             token: nil,
+             token_date: nil
+           }) do
+        {:ok, _} ->
+          send_resp(conn, :no_content, "")
+
+        {:error, :user, %{errors: errors}, _} ->
+          render(conn, "errors.json", errors: errors)
+      end
+    else
+      render(conn, "errors.json", errors: [token: {"Token inválido", []}])
+    end
+  end
+
   def index(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    IO.inspect(user.client_id)
-
-    users = Accounts.list_users()
+    users = Accounts.list_users(user.client_id)
     render(conn, "index.json", users: users)
   end
 
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, user_params) do
     user = Guardian.Plug.current_resource(conn)
     user_params = Map.put(user_params, "client_id", user.client_id)
 

@@ -11,11 +11,23 @@ defmodule Norte.Accounts do
 
   def list_users do
     Repo.all(User)
+    # Repo.all(User, preload: [:client])
+    # |> Repo.preload(:client)
+  end
+
+  def list_users(client_id) do
+    q = from u in User, where: u.client_id == ^client_id
+    Repo.all(q)
   end
 
   def get_user!(id), do: Repo.get!(User, id)
 
   def get_user(id), do: Repo.get(User, id)
+
+  def get_user_uid(uid) do
+    q = from u in User, where: u.uid == ^uid
+    Repo.one(q)
+  end
 
   def create_user(attrs \\ %{}) do
     %User{}
@@ -26,6 +38,12 @@ defmodule Norte.Accounts do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_user_with_password(%User{} = user, attrs) do
+    user
+    |> User.changeset_with_password(attrs)
     |> Repo.update()
   end
 

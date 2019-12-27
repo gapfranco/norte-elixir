@@ -21,11 +21,22 @@ defmodule NorteWeb.Api.UserView do
       admin: user.admin,
       block: user.block,
       token: user.token,
-      token_date: user.token_date
+      token_date: user.token_date,
+      client_id: user.client_id
+      # client: render_one(user.client, NorteWeb.Api.ClientView, "client.json")
     }
   end
 
   def render("jwt.json", %{jwt: jwt}) do
     %{jwt: jwt}
+  end
+
+  def render("errors.json", %{errors: errors}) do
+    msgs =
+      Enum.into(errors, %{})
+      |> Enum.map(fn {k, {t, _}} -> {k, t} end)
+      |> Enum.into(%{})
+
+    %{errors: msgs}
   end
 end
