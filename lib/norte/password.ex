@@ -35,7 +35,11 @@ defmodule Norte.Password do
         {:error, "Login error."}
 
       user ->
-        {:ok, user}
+        if user.expired || user.block do
+          {:error, :blocked}
+        else
+          {:ok, user}
+        end
     end
   end
 

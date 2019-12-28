@@ -16,7 +16,6 @@ defmodule NorteWeb.Api.UserView do
       uid: user.uid,
       username: user.username,
       email: user.email,
-      password_hash: user.password_hash,
       expired: user.expired,
       admin: user.admin,
       block: user.block,

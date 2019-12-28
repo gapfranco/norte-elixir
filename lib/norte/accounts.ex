@@ -24,6 +24,11 @@ defmodule Norte.Accounts do
 
   def get_user(id), do: Repo.get(User, id)
 
+  def get_user(id, client_id) do
+    q = from u in User, where: u.id == ^id, where: u.client_id == ^client_id
+    Repo.one(q)
+  end
+
   def get_user_uid(uid) do
     q = from u in User, where: u.uid == ^uid
     Repo.one(q)
@@ -49,6 +54,12 @@ defmodule Norte.Accounts do
 
   def delete_user(%User{} = user) do
     Repo.delete(user)
+  end
+
+  def delete_user(%User{} = user, client_id) do
+    if user.client_id == client_id do
+      Repo.delete(user)
+    end
   end
 
   def change_user(%User{} = user) do
