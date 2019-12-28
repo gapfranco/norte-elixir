@@ -94,7 +94,6 @@ defmodule Norte.Accounts do
       User.changeset_with_password(%User{client_id: client_id}, attrs)
     end)
     |> Repo.transaction()
-    |> IO.inspect()
   end
 
   def update_client(%Client{} = client, attrs) do

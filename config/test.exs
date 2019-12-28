@@ -2,8 +2,8 @@ use Mix.Config
 
 # Configure your database
 config :norte, Norte.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "gapfranco",
+  password: "",
   database: "norte_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
