@@ -22,8 +22,19 @@ defmodule Norte.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:uid, :username, :email, :client_id, :token, :token_date, :expired, :block])
-    |> validate_required([:uid, :username, :email, :client_id, :password_hash])
+    |> cast(attrs, [
+      :uid,
+      :username,
+      :email,
+      :client_id,
+      :token,
+      :token_date,
+      :expired,
+      :admin,
+      :block,
+      :client_id
+    ])
+    |> validate_required([:uid, :username, :email, :client_id, :password_hash, :client_id])
     |> validate_length(:uid, min: 3, max: 20)
     |> validate_length(:username, min: 3, max: 200)
     |> unique_constraint(:uid)
