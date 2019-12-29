@@ -26,7 +26,7 @@ defmodule NorteWeb.Router do
   scope "/", NorteWeb do
     pipe_through :browser
 
-    resources "/clients", ClientController, only: [:show, :new, :create]
+    # resources "/clients", ClientController, only: [:show, :new, :create]
     get "/", PageController, :index
   end
 
