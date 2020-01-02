@@ -46,7 +46,8 @@ defmodule Norte.MixProject do
       {:pbkdf2_elixir, "~> 1.0"},
       {:guardian, "~> 2.0"},
       {:bamboo, "~> 1.3"},
-      {:bamboo_smtp, "~> 2.1.0"}
+      {:bamboo_smtp, "~> 2.1.0"},
+      {:cors_plug, "~> 2.0"}
     ]
   end
 

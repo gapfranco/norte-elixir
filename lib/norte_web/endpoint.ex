@@ -42,5 +42,6 @@ defmodule NorteWeb.Endpoint do
     key: "_norte_key",
     signing_salt: "rOTt5Hfs"
 
+  plug CORSPlug, origin: "*"
   plug NorteWeb.Router
 end
