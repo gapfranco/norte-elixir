@@ -1,4 +1,4 @@
-defmodule NorteWeb.Api.UserController do
+defmodule NorteWeb.UserController do
   use NorteWeb, :controller
 
   alias Norte.Accounts

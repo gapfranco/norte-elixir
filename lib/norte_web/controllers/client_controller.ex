@@ -2,31 +2,46 @@ defmodule NorteWeb.ClientController do
   use NorteWeb, :controller
 
   alias Norte.Accounts
+  alias Norte.Accounts.Client
+
+  action_fallback NorteWeb.FallbackController
+
+  def sign_up(conn, client_params) do
+    case Accounts.create_client(client_params) do
+      {:ok, %{client: client, user: user}} ->
+        render(conn, "signup.json", client: client, user: user)
+
+      {:error, :user, %{errors: errors}, _} ->
+        render(conn, "errors.json", errors: errors)
+
+      {:error, :client, %{errors: errors}, _} ->
+        render(conn, "errors.json", errors: errors)
+    end
+  end
+
+  def index(conn, _params) do
+    clients = Accounts.list_clients()
+    render(conn, "index.json", clients: clients)
+  end
 
   def show(conn, %{"id" => id}) do
     client = Accounts.get_client!(id)
-    render(conn, "show.html", client: client)
+    render(conn, "show.json", client: client)
   end
 
-  def new(conn, _params) do
-    client = Accounts.new_client()
-    render(conn, "new.html", client: client)
+  def update(conn, %{"id" => id, "client" => client_params}) do
+    client = Accounts.get_client!(id)
+
+    with {:ok, %Client{} = client} <- Accounts.update_client(client, client_params) do
+      render(conn, "show.json", client: client)
+    end
   end
 
-  def create(conn, %{"user" => client_params}) do
-    create(conn, %{"client" => client_params})
-  end
+  def delete(conn, %{"id" => id}) do
+    client = Accounts.get_client!(id)
 
-  def create(conn, %{"client" => client_params}) do
-    case Accounts.insert_client(client_params) do
-      {:ok, _} ->
-        redirect(conn, to: Routes.page_path(conn, :index))
-
-      {:error, :user, user, _} ->
-        render(conn, "new.html", client: user)
-
-      {:error, :client, client, _} ->
-        render(conn, "new.html", client: client)
+    with {:ok, %Client{}} <- Accounts.delete_client(client) do
+      send_resp(conn, :no_content, "")
     end
   end
 end

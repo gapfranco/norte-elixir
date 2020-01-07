@@ -31,7 +31,7 @@ defmodule NorteWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", NorteWeb.Api do
+  scope "/api", NorteWeb do
     pipe_through :api
     post "/signup", ClientController, :sign_up
     post "/signin", UserController, :sign_in
@@ -39,9 +39,10 @@ defmodule NorteWeb.Router do
     put "/password", UserController, :create_password
   end
 
-  scope "/api", NorteWeb.Api do
+  scope "/api", NorteWeb do
     pipe_through [:api, :jwt_authenticated]
     resources "/users", UserController, except: [:new, :edit]
     resources "/clients", ClientController, only: [:index, :show, :update, :delete]
+    resources "/units", UnitController, except: [:new, :edit]
   end
 end

@@ -1,6 +1,6 @@
-defmodule NorteWeb.Api.UserView do
+defmodule NorteWeb.UserView do
   use NorteWeb, :view
-  alias NorteWeb.Api.UserView
+  alias NorteWeb.UserView
 
   def render("index.json", %{users: users}) do
     %{data: render_many(users, UserView, "user.json")}
