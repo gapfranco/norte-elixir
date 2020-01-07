@@ -4,7 +4,7 @@ defmodule NorteWeb.UnitController do
   alias Norte.Base
   alias Norte.Base.Unit
 
-  action_fallback NorteWeb.Api.FallbackController
+  action_fallback NorteWeb.FallbackController
 
   def index(conn, _params) do
     units = Base.list_units()
@@ -12,6 +12,29 @@ defmodule NorteWeb.UnitController do
   end
 
   def create(conn, %{"unit" => unit_params}) do
+    user = Guardian.Plug.current_resource(conn)
+    unit_params = Map.put(unit_params, "client_id", user.client_id)
+    pts = String.split(unit_params["key"], ".")
+
+    if length(pts) > 1 do
+      {_, arr} = List.pop_at(pts, -1)
+
+      sup =
+        Enum.join(arr, ".")
+        |> Base.get_unit_by_key()
+
+      if sup === nil do
+        send_resp(conn, :bad_request, "Invalid key")
+      else
+        unit_params = Map.put(unit_params, "up_id", sup.id)
+        write_unit(conn, unit_params)
+      end
+    else
+      write_unit(conn, unit_params)
+    end
+  end
+
+  defp write_unit(conn, unit_params) do
     with {:ok, %Unit{} = unit} <- Base.create_unit(unit_params) do
       conn
       |> put_status(:created)

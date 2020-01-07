@@ -14,7 +14,7 @@ defmodule Norte.Base.Unit do
   @doc false
   def changeset(unit, attrs) do
     unit
-    |> cast(attrs, [:key, :name])
+    |> cast(attrs, [:key, :name, :client_id, :up_id])
     |> validate_required([:key, :name])
     |> unique_constraint(:key)
   end

@@ -37,6 +37,11 @@ defmodule Norte.Base do
   """
   def get_unit!(id), do: Repo.get!(Unit, id)
 
+  def get_unit_by_key(key) do
+    q = from u in Unit, where: u.key == ^key
+    Repo.one(q)
+  end
+
   @doc """
   Creates a unit.
 
