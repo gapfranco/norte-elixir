@@ -1,5 +1,0 @@
-<section class="phx-hero">
-  <h1><%= gettext "%{name} - Conformidade", name: "Norte" %></h1>
-  <p>Informações de resultado e desempenho.</p>
-</section>
-
