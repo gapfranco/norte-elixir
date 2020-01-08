@@ -6,9 +6,14 @@ defmodule NorteWeb.UnitControllerTest do
 
   alias Norte.Base
   alias Norte.Base.Unit
+  alias Norte.Accounts.User
 
   @create_attrs %{
     key: "cod",
+    name: "some name"
+  }
+  @create_sub_attrs %{
+    key: "cod.1",
     name: "some name"
   }
   @update_attrs %{
@@ -39,7 +44,7 @@ defmodule NorteWeb.UnitControllerTest do
 
     user = Map.put(user, :password, nil)
     {:ok, token, _claims} = Password.token_sign_in("usr@tst", "secret")
-    {client, user, token}
+    token
   end
 
   setup %{conn: conn} do
@@ -48,7 +53,7 @@ defmodule NorteWeb.UnitControllerTest do
 
   describe "index" do
     test "lists all units", %{conn: conn} do
-      {_, _, token} = client_fixture()
+      token = client_fixture()
 
       conn =
         conn
@@ -61,26 +66,38 @@ defmodule NorteWeb.UnitControllerTest do
 
   describe "create unit" do
     test "renders unit when data is valid", %{conn: conn} do
-      {_, _, token} = client_fixture()
+      token = client_fixture()
 
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
         |> post(Routes.unit_path(conn, :create), unit: @create_attrs)
 
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"id" => id, "client_id" => client_id} = json_response(conn, 201)["data"]
 
       conn = get(conn, Routes.unit_path(conn, :show, id))
 
       assert %{
                "id" => id,
                "key" => "cod",
-               "name" => "some name"
+               "name" => "some name",
+               "client_id" => client_id
              } = json_response(conn, 200)["data"]
     end
 
+    test "renders error when subkey with no key", %{conn: conn} do
+      token = client_fixture()
+
+      conn =
+        conn
+        |> put_req_header("authorization", "bearer: " <> token)
+        |> post(Routes.unit_path(conn, :create), unit: @create_sub_attrs)
+
+      assert conn.status == 400
+    end
+
     test "renders errors when data is invalid", %{conn: conn} do
-      {_, _, token} = client_fixture()
+      token = client_fixture()
 
       conn =
         conn
@@ -95,7 +112,7 @@ defmodule NorteWeb.UnitControllerTest do
     setup [:create_unit]
 
     test "renders unit when data is valid", %{conn: conn, unit: %Unit{id: id} = unit} do
-      {_, _, token} = client_fixture()
+      token = client_fixture()
 
       conn =
         conn
@@ -113,7 +130,7 @@ defmodule NorteWeb.UnitControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, unit: unit} do
-      {_, _, token} = client_fixture()
+      token = client_fixture()
 
       conn =
         conn
@@ -128,7 +145,7 @@ defmodule NorteWeb.UnitControllerTest do
     setup [:create_unit]
 
     test "deletes chosen unit", %{conn: conn, unit: unit} do
-      {_, _, token} = client_fixture()
+      token = client_fixture()
 
       conn =
         conn
@@ -141,6 +158,21 @@ defmodule NorteWeb.UnitControllerTest do
         get(conn, Routes.unit_path(conn, :show, unit))
       end
     end
+  end
+
+  test "requires user authentication on all actions", %{conn: conn} do
+    Enum.each(
+      [
+        get(conn, Routes.unit_path(conn, :index)),
+        get(conn, Routes.unit_path(conn, :show, "123")),
+        put(conn, Routes.unit_path(conn, :update, "123", %{})),
+        post(conn, Routes.unit_path(conn, :create, %{})),
+        delete(conn, Routes.unit_path(conn, :delete, "123"))
+      ],
+      fn conn ->
+        assert json_response(conn, 401)
+      end
+    )
   end
 
   defp create_unit(_) do

@@ -11,6 +11,6 @@ defmodule NorteWeb.UnitView do
   end
 
   def render("unit.json", %{unit: unit}) do
-    %{id: unit.id, key: unit.key, name: unit.name}
+    %{id: unit.id, key: unit.key, name: unit.name, client_id: unit.client_id}
   end
 end

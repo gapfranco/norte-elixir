@@ -9,10 +9,13 @@ defmodule Norte.Base do
   alias Norte.Base.Unit
 
   def list_units do
-    Repo.all(Unit)
+    q = from u in Unit, order_by: u.key
+    Repo.all(q)
   end
 
   def get_unit!(id), do: Repo.get!(Unit, id)
+
+  def get_unit(id), do: Repo.get(Unit, id)
 
   def get_unit_by_key(key) do
     q = from u in Unit, where: u.key == ^key
