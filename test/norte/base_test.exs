@@ -6,8 +6,8 @@ defmodule Norte.BaseTest do
   describe "units" do
     alias Norte.Base.Unit
 
-    @valid_attrs %{key: "some key", name: "some name"}
-    @update_attrs %{key: "some updated key", name: "some updated name"}
+    @valid_attrs %{key: "cod", name: "some name"}
+    @update_attrs %{name: "some updated name"}
     @invalid_attrs %{key: nil, name: nil}
 
     def unit_fixture(attrs \\ %{}) do
@@ -31,7 +31,7 @@ defmodule Norte.BaseTest do
 
     test "create_unit/1 with valid data creates a unit" do
       assert {:ok, %Unit{} = unit} = Base.create_unit(@valid_attrs)
-      assert unit.key == "some key"
+      assert unit.key == "cod"
       assert unit.name == "some name"
     end
 
@@ -42,7 +42,6 @@ defmodule Norte.BaseTest do
     test "update_unit/2 with valid data updates the unit" do
       unit = unit_fixture()
       assert {:ok, %Unit{} = unit} = Base.update_unit(unit, @update_attrs)
-      assert unit.key == "some updated key"
       assert unit.name == "some updated name"
     end
 
