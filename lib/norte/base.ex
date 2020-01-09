@@ -14,10 +14,9 @@ defmodule Norte.Base do
     Repo.all(q)
   end
 
-  def list_units_page(page \\ 1, sz \\ 10) do
-    # IO.inspect(sz)
+  def list_units_page(params) do
     q = from u in Unit, order_by: u.key
-    Pagination.page(q, page, per_page: sz)
+    Pagination.list_query(q, params)
   end
 
   def get_unit!(id), do: Repo.get!(Unit, id)

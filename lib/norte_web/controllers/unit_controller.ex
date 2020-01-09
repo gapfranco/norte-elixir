@@ -7,19 +7,7 @@ defmodule NorteWeb.UnitController do
   action_fallback NorteWeb.FallbackController
 
   def index(conn, params) do
-    pg =
-      case params do
-        %{"p" => p} -> p
-        _ -> 1
-      end
-
-    sz =
-      case params do
-        %{"s" => s} -> String.to_integer(s)
-        _ -> 10
-      end
-
-    page = Base.list_units_page(pg, sz)
+    page = Base.list_units_page(params)
     render(conn, "index_page.json", page: page)
   end
 
