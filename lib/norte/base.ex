@@ -7,10 +7,17 @@ defmodule Norte.Base do
   alias Norte.Repo
 
   alias Norte.Base.Unit
+  alias Norte.Pagination
 
   def list_units do
     q = from u in Unit, order_by: u.key
     Repo.all(q)
+  end
+
+  def list_units_page(page \\ 1, sz \\ 10) do
+    # IO.inspect(sz)
+    q = from u in Unit, order_by: u.key
+    Pagination.page(q, page, per_page: sz)
   end
 
   def get_unit!(id), do: Repo.get!(Unit, id)
