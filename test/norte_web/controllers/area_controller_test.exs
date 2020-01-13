@@ -1,11 +1,12 @@
-defmodule NorteWeb.UnitControllerTest do
+defmodule NorteWeb.AreaControllerTest do
   use NorteWeb.ConnCase
 
   alias Norte.Accounts
   alias Norte.Password
 
-  alias Norte.Base
-  alias Norte.Base.Unit
+  alias Norte.Areas
+  alias Norte.Areas.Area
+  # alias Norte.Accounts.User
 
   @create_attrs %{
     key: "cod",
@@ -30,9 +31,9 @@ defmodule NorteWeb.UnitControllerTest do
     password_confirmation: "secret"
   }
 
-  def fixture(:unit) do
-    {:ok, unit} = Base.create_unit(@create_attrs)
-    unit
+  def fixture(:area) do
+    {:ok, area} = Areas.create_area(@create_attrs)
+    area
   end
 
   def client_fixture(attrs \\ %{}) do
@@ -51,30 +52,30 @@ defmodule NorteWeb.UnitControllerTest do
   end
 
   describe "index" do
-    test "lists all units", %{conn: conn} do
+    test "lists all areas", %{conn: conn} do
       token = client_fixture()
 
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> get(Routes.unit_path(conn, :index))
+        |> get(Routes.area_path(conn, :index))
 
       assert json_response(conn, 200)["list"] == []
     end
   end
 
-  describe "create unit" do
-    test "renders unit when data is valid", %{conn: conn} do
+  describe "create area" do
+    test "renders area when data is valid", %{conn: conn} do
       token = client_fixture()
 
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> post(Routes.unit_path(conn, :create), unit: @create_attrs)
+        |> post(Routes.area_path(conn, :create), area: @create_attrs)
 
       assert %{"id" => id, "client_id" => client_id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.unit_path(conn, :show, id))
+      conn = get(conn, Routes.area_path(conn, :show, id))
 
       assert %{
                "id" => id,
@@ -90,7 +91,7 @@ defmodule NorteWeb.UnitControllerTest do
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> post(Routes.unit_path(conn, :create), unit: @create_sub_attrs)
+        |> post(Routes.area_path(conn, :create), area: @create_sub_attrs)
 
       assert conn.status == 400
     end
@@ -101,26 +102,26 @@ defmodule NorteWeb.UnitControllerTest do
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> post(Routes.unit_path(conn, :create), unit: @invalid_attrs)
+        |> post(Routes.area_path(conn, :create), area: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "update unit" do
-    setup [:create_unit]
+  describe "update area" do
+    setup [:create_area]
 
-    test "renders unit when data is valid", %{conn: conn, unit: %Unit{id: id} = unit} do
+    test "renders area when data is valid", %{conn: conn, area: %Area{id: id} = area} do
       token = client_fixture()
 
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> put(Routes.unit_path(conn, :update, unit), unit: @update_attrs)
+        |> put(Routes.area_path(conn, :update, area), area: @update_attrs)
 
       # conn = put(conn, Routes.unit_path(conn, :update, unit), unit: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
-      conn = get(conn, Routes.unit_path(conn, :show, id))
+      conn = get(conn, Routes.area_path(conn, :show, id))
 
       assert %{
                "id" => id,
@@ -128,33 +129,33 @@ defmodule NorteWeb.UnitControllerTest do
              } = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn, unit: unit} do
+    test "renders errors when data is invalid", %{conn: conn, area: area} do
       token = client_fixture()
 
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> put(Routes.unit_path(conn, :update, unit), unit: @invalid_attrs)
+        |> put(Routes.area_path(conn, :update, area), area: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "delete unit" do
-    setup [:create_unit]
+  describe "delete area" do
+    setup [:create_area]
 
-    test "deletes chosen unit", %{conn: conn, unit: unit} do
+    test "deletes chosen area", %{conn: conn, area: area} do
       token = client_fixture()
 
       conn =
         conn
         |> put_req_header("authorization", "bearer: " <> token)
-        |> delete(Routes.unit_path(conn, :delete, unit))
+        |> delete(Routes.area_path(conn, :delete, area))
 
       assert response(conn, 204)
 
       assert_error_sent 404, fn ->
-        get(conn, Routes.unit_path(conn, :show, unit))
+        get(conn, Routes.area_path(conn, :show, area))
       end
     end
   end
@@ -162,11 +163,11 @@ defmodule NorteWeb.UnitControllerTest do
   test "requires user authentication on all actions", %{conn: conn} do
     Enum.each(
       [
-        get(conn, Routes.unit_path(conn, :index)),
-        get(conn, Routes.unit_path(conn, :show, "123")),
-        put(conn, Routes.unit_path(conn, :update, "123", %{})),
-        post(conn, Routes.unit_path(conn, :create, %{})),
-        delete(conn, Routes.unit_path(conn, :delete, "123"))
+        get(conn, Routes.area_path(conn, :index)),
+        get(conn, Routes.area_path(conn, :show, "123")),
+        put(conn, Routes.area_path(conn, :update, "123", %{})),
+        post(conn, Routes.area_path(conn, :create, %{})),
+        delete(conn, Routes.area_path(conn, :delete, "123"))
       ],
       fn conn ->
         assert json_response(conn, 401)
@@ -174,8 +175,8 @@ defmodule NorteWeb.UnitControllerTest do
     )
   end
 
-  defp create_unit(_) do
-    unit = fixture(:unit)
-    {:ok, unit: unit}
+  defp create_area(_) do
+    area = fixture(:area)
+    {:ok, area: area}
   end
 end
