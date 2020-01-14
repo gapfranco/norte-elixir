@@ -45,5 +45,6 @@ defmodule NorteWeb.Router do
     resources "/clients", ClientController, only: [:index, :show, :update, :delete]
     resources "/units", UnitController, except: [:new, :edit]
     resources "/areas", AreaController, except: [:new, :edit]
+    resources "/processes", ProcessController, except: [:new, :edit]
   end
 end
