@@ -38,7 +38,7 @@ defmodule NorteWeb.AreaController do
     with {:ok, %Area{} = area} <- Areas.create_area(params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.unit_path(conn, :show, area))
+      |> put_resp_header("location", Routes.area_path(conn, :show, area))
       |> render("show.json", area: area)
     end
   end

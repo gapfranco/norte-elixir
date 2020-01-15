@@ -46,5 +46,6 @@ defmodule NorteWeb.Router do
     resources "/units", UnitController, except: [:new, :edit]
     resources "/areas", AreaController, except: [:new, :edit]
     resources "/processes", ProcessController, except: [:new, :edit]
+    resources "/risks", RiskController, except: [:new, :edit]
   end
 end
