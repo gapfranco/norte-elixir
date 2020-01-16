@@ -6,6 +6,20 @@ defmodule NorteWeb.UserView do
     %{data: render_many(users, UserView, "user.json")}
   end
 
+  def render("index_page.json", %{page: page}) do
+    %{
+      count: page.count,
+      first: page.first,
+      has_next: page.has_next,
+      has_prev: page.has_prev,
+      last: page.last,
+      next_page: page.next_page,
+      page: page.page,
+      prev_page: page.prev_page,
+      list: render_many(page.list, UserView, "user.json")
+    }
+  end
+
   def render("show.json", %{user: user}) do
     %{data: render_one(user, UserView, "user.json")}
   end

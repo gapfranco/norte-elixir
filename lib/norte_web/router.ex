@@ -42,6 +42,7 @@ defmodule NorteWeb.Router do
   scope "/api", NorteWeb do
     pipe_through [:api, :jwt_authenticated]
     resources "/users", UserController, except: [:new, :edit]
+    get "/users-uid/:uid", UserController, :show_uid
     resources "/clients", ClientController, only: [:index, :show, :update, :delete]
     resources "/units", UnitController, except: [:new, :edit]
     resources "/areas", AreaController, except: [:new, :edit]

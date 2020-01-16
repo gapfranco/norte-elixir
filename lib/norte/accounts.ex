@@ -6,18 +6,27 @@ defmodule Norte.Accounts do
   import Ecto.Query, warn: false
   alias Norte.Repo
   alias Ecto.Multi
+  alias Norte.Pagination
 
   alias Norte.Accounts.User
 
   def list_users do
     Repo.all(User)
-    # Repo.all(User, preload: [:client])
-    # |> Repo.preload(:client)
   end
 
   def list_users(client_id) do
     q = from u in User, where: u.client_id == ^client_id
     Repo.all(q)
+  end
+
+  def list_users_page(params) do
+    q = from u in User, order_by: u.uid
+    Pagination.list_query(q, params)
+  end
+
+  def list_users_page(client_id, params) do
+    q = from u in User, where: u.client_id == ^client_id, order_by: u.uid
+    Pagination.list_query(q, params)
   end
 
   def get_user!(id), do: Repo.get!(User, id)
@@ -31,6 +40,11 @@ defmodule Norte.Accounts do
 
   def get_user_uid(uid) do
     q = from u in User, where: u.uid == ^uid
+    Repo.one(q)
+  end
+
+  def get_user_uid(uid, client_id) do
+    q = from u in User, where: u.uid == ^uid, where: u.client_id == ^client_id
     Repo.one(q)
   end
 

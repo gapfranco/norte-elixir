@@ -67,17 +67,22 @@ defmodule NorteWeb.UserController do
     end
   end
 
-  def index(conn, _params) do
+  def index(conn, params) do
     user = Guardian.Plug.current_resource(conn)
-    users = Accounts.list_users(user.client_id)
-    render(conn, "index.json", users: users)
+    page = Accounts.list_users_page(user.client_id, params)
+    render(conn, "index_page.json", page: page)
   end
 
-  def create(conn, user_params) do
-    user = Guardian.Plug.current_resource(conn)
-    user_params = Map.put(user_params, "client_id", user.client_id)
+  # def index(conn, params) do
+  #   page = Areas.list_areas_page(params)
+  #   render(conn, "index_page.json", page: page)
+  # end
 
-    with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
+  def create(conn, %{"user" => params}) do
+    user = Guardian.Plug.current_resource(conn)
+    params = Map.put(params, "client_id", user.client_id)
+
+    with {:ok, %User{} = user} <- Accounts.create_user(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.user_path(conn, :show, user))
@@ -91,13 +96,20 @@ defmodule NorteWeb.UserController do
     render(conn, "show.json", user: user)
   end
 
+  def show_uid(conn, %{"uid" => uid}) do
+    current_user = Guardian.Plug.current_resource(conn)
+    user = Accounts.get_user_uid(uid, current_user.client_id)
+    render(conn, "show.json", user: user)
+  end
+
   def update(conn, %{"id" => id, "user" => user_params}) do
     current_user = Guardian.Plug.current_resource(conn)
     user = Accounts.get_user(id, current_user.client_id)
 
     if user != nil do
-      Accounts.update_user(user, user_params)
-      send_resp(conn, :no_content, "")
+      with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
+        render(conn, "show.json", user: user)
+      end
     else
       send_resp(conn, :bad_request, "Invalid user")
     end
