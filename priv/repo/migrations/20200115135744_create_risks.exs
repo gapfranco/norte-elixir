@@ -5,8 +5,8 @@ defmodule Norte.Repo.Migrations.CreateRisks do
     create table(:risks) do
       add :key, :string
       add :name, :string
-      add :up_id, references(:areas, on_delete: :nothing)
-      add :client_id, references(:clients, on_delete: :nothing)
+      add :up_id, references(:areas, on_delete: :delete_all)
+      add :client_id, references(:clients, on_delete: :delete_all)
 
       timestamps()
     end
