@@ -12,6 +12,7 @@ defmodule NorteWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug(NorteWeb.Plugs.Context)
   end
 
   pipeline :jwt_authenticated do
