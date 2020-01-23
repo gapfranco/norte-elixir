@@ -39,7 +39,7 @@ defmodule Norte.Password do
     case Repo.get_by(User, uid: uid) do
       nil ->
         dummy_verify()
-        {:error, "Login error."}
+        {:error, :login_error}
 
       user ->
         if user.expired || user.block do
@@ -54,7 +54,7 @@ defmodule Norte.Password do
     if verify_with_hash(password, user.password_hash) do
       {:ok, user}
     else
-      {:error, :invalid_password}
+      {:error, :login_error}
     end
   end
 end

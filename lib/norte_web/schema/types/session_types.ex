@@ -16,6 +16,8 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:uid, :string)
     field(:username, :string)
     field(:email, :string)
+    field(:admin, :boolean)
+    field(:block, :boolean)
     field(:client_id, :id)
   end
 end
