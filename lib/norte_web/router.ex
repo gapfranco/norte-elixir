@@ -23,11 +23,20 @@ defmodule NorteWeb.Router do
     forward "/sent_emails", Bamboo.SentEmailViewerPlug
   end
 
-  scope "/", NorteWeb do
-    pipe_through :browser
+  # scope "/", NorteWeb do
+  #   pipe_through :browser
 
-    # resources "/clients", ClientController, only: [:show, :new, :create]
-    get "/", PageController, :index
+  #   get "/", PageController, :index
+  # end
+
+  scope "/" do
+    pipe_through :api
+
+    forward "/graphql", Absinthe.Plug, schema: NorteWeb.Schema
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: NorteWeb.Schema,
+      socket: NorteWeb.UserSocket
   end
 
   # Other scopes may use custom stacks.

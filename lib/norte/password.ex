@@ -13,6 +13,13 @@ defmodule Norte.Password do
 
   def dummy_verify, do: no_user_verify()
 
+  def token_signin(input) do
+    with {:ok, user} <- uid_password_auth(input.uid, input.password),
+         {:ok, jwt_token, _} <- Guardian.encode_and_sign(user) do
+      {:ok, %{token: jwt_token, user: user}}
+    end
+  end
+
   def token_sign_in(uid, password) do
     case uid_password_auth(uid, password) do
       {:ok, user} ->
