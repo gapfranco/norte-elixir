@@ -15,5 +15,11 @@ defmodule NorteWeb.Schema.Mutations.SessionMutations do
       arg(:input, non_null(:signup_input_type))
       resolve(&Resolvers.SessionResolvers.signup_user/3)
     end
+
+    @desc "Forgot password - send e-mail to reset"
+    field :forgot_password, type: :message_type do
+      arg(:uid, non_null(:string))
+      resolve(&Resolvers.SessionResolvers.forgot_password/3)
+    end
   end
 end

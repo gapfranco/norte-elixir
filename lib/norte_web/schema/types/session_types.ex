@@ -29,6 +29,10 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:email, non_null(:string))
   end
 
+  object :message_type do
+    field(:msg, non_null(:string))
+  end
+
   object :user_type do
     field(:id, :id)
     field(:uid, :string)
