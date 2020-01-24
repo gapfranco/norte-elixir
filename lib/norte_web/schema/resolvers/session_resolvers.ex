@@ -48,4 +48,33 @@ defmodule NorteWeb.Schema.Resolvers.SessionResolvers do
       {:ok, %{msg: "E-Mail enviado"}}
     end
   end
+
+  def create_password(_, %{input: input}, _) do
+    user = Accounts.get_user_uid(input.uid)
+    IO.inspect(input)
+
+    if user == nil do
+      {:error, "Usuário inválido"}
+    else
+      date = DateTime.utc_now()
+
+      if user.token == input.token and user.token_date >= date do
+        case Accounts.update_user_with_password(user, %{
+               password: input.password,
+               password_confirmation: input.password_confirmation,
+               expired: false,
+               token: nil,
+               token_date: nil
+             }) do
+          {:ok, _} ->
+            {:ok, %{msg: "Password created"}}
+
+          {:error, changeset} ->
+            {:error, ChangesetErrors.transform_errors(changeset)}
+        end
+      else
+        {:error, "Invalid token"}
+      end
+    end
+  end
 end

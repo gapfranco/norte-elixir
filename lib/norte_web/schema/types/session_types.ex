@@ -21,6 +21,13 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:password_confirmation, non_null(:string))
   end
 
+  input_object :create_password_input_type do
+    field(:uid, non_null(:string))
+    field(:token, non_null(:string))
+    field(:password, non_null(:string))
+    field(:password_confirmation, non_null(:string))
+  end
+
   object :signup_type do
     field(:cid, non_null(:string))
     field(:name, non_null(:string))

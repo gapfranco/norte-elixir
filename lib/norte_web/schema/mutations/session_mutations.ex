@@ -21,5 +21,11 @@ defmodule NorteWeb.Schema.Mutations.SessionMutations do
       arg(:uid, non_null(:string))
       resolve(&Resolvers.SessionResolvers.forgot_password/3)
     end
+
+    @desc "Create new password"
+    field :create_password, type: :message_type do
+      arg(:input, non_null(:create_password_input_type))
+      resolve(&Resolvers.SessionResolvers.create_password/3)
+    end
   end
 end
