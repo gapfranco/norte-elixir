@@ -4,14 +4,14 @@ defmodule NorteWeb.Schema.Mutations.SessionMutations do
   alias NorteWeb.Schema.Resolvers
 
   object :session_mutations do
-    @desc "Login a user and return a JWT token"
-    field :login_user, type: :session_type do
+    @desc "User sign in returning JWT token"
+    field :signin, type: :session_type do
       arg(:input, non_null(:session_input_type))
       resolve(&Resolvers.SessionResolvers.login_user/3)
     end
 
-    @desc "Signup a new user and client"
-    field :signup_user, type: :signup_type do
+    @desc "Create new client and user"
+    field :signup, type: :signup_type do
       arg(:input, non_null(:signup_input_type))
       resolve(&Resolvers.SessionResolvers.signup_user/3)
     end

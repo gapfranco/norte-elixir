@@ -7,6 +7,8 @@ defmodule NorteWeb.Schema.Queries.UserQueries do
   object :user_queries do
     @desc "Get a list of all users"
     field :users, list_of(:user_type) do
+      arg(:page, :integer)
+      arg(:size, :integer)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.UserResolvers.list_users/3)
     end
