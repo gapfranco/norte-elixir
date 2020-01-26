@@ -12,5 +12,10 @@ defmodule NorteWeb.Schema.Queries.UserQueries do
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.UserResolvers.list_users/3)
     end
+
+    @desc "Get a list of all clients"
+    field :clients, list_of(:client_type) do
+      resolve(&Resolvers.UserResolvers.list_clients/3)
+    end
   end
 end

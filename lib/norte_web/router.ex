@@ -2,14 +2,6 @@ defmodule NorteWeb.Router do
   use NorteWeb, :router
   alias Norte.Guardian
 
-  pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
     plug(NorteWeb.Plugs.Context)
@@ -20,15 +12,8 @@ defmodule NorteWeb.Router do
   end
 
   if Mix.env() == :dev do
-    # If using Phoenix
     forward "/sent_emails", Bamboo.SentEmailViewerPlug
   end
-
-  # scope "/", NorteWeb do
-  #   pipe_through :browser
-
-  #   get "/", PageController, :index
-  # end
 
   scope "/" do
     pipe_through :api

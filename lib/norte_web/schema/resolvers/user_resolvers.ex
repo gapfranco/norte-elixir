@@ -9,7 +9,7 @@ defmodule NorteWeb.Schema.Resolvers.UserResolvers do
     {:ok, Accounts.list_users(context.current_user.client_id)}
   end
 
-  def user_client(user, _, _) do
-    {:ok, Accounts.get_user_client(user)}
+  def list_clients(_, _, _) do
+    {:ok, Accounts.list_clients()}
   end
 end

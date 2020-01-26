@@ -50,7 +50,8 @@ defmodule Norte.MixProject do
       {:bamboo, "~> 1.3"},
       {:bamboo_smtp, "~> 2.1.0"},
       {:decimal, "~> 1.0"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+      {:dataloader, "~> 1.0.7"}
     ]
   end
 

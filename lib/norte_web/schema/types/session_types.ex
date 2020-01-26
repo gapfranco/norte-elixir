@@ -1,5 +1,7 @@
 defmodule NorteWeb.Schema.Types.SessionTypes do
   use Absinthe.Schema.Notation
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  # import Absinthe.Resolution.Helpers, only: [dataloader: 1, dataloader: 3]
 
   object :session_type do
     field(:token, :string)
@@ -48,6 +50,7 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:term, :datetime)
     field(:val_unit, :decimal)
     field(:val_user, :decimal)
+    field :users, list_of(:user_type), resolve: dataloader(Users)
   end
 
   object :user_type do
@@ -57,9 +60,6 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:email, :string)
     field(:admin, :boolean)
     field(:block, :boolean)
-
-    field(:client, :client_type) do
-      resolve(&NorteWeb.Schema.Resolvers.UserResolvers.user_client/3)
-    end
+    field :client, :client_type, resolve: dataloader(Clients)
   end
 end
