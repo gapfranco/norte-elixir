@@ -10,12 +10,14 @@ defmodule NorteWeb.Schema do
 
   # Queries
   import_types(NorteWeb.Schema.Queries.UserQueries)
+  import_types(NorteWeb.Schema.Queries.SessionQueries)
 
   # Mutations
   import_types(NorteWeb.Schema.Mutations.SessionMutations)
 
   query do
     import_fields(:user_queries)
+    import_fields(:session_queries)
   end
 
   mutation do

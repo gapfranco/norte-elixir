@@ -77,4 +77,12 @@ defmodule NorteWeb.Schema.Resolvers.SessionResolvers do
       end
     end
   end
+
+  def me(_, _, %{context: %{current_user: user}}) do
+    {:ok, user}
+  end
+
+  def me(_, _, _) do
+    {:ok, nil}
+  end
 end
