@@ -40,6 +40,16 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:msg, non_null(:string))
   end
 
+  object :client_type do
+    field(:id, :id)
+    field(:cid, :string)
+    field(:name, :string)
+    field(:code, :string)
+    field(:term, :datetime)
+    field(:val_unit, :decimal)
+    field(:val_user, :decimal)
+  end
+
   object :user_type do
     field(:id, :id)
     field(:uid, :string)
@@ -47,6 +57,9 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:email, :string)
     field(:admin, :boolean)
     field(:block, :boolean)
-    field(:client_id, :id)
+
+    field(:client, :client_type) do
+      resolve(&NorteWeb.Schema.Resolvers.UserResolvers.user_client/3)
+    end
   end
 end

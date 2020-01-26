@@ -87,7 +87,11 @@ defmodule Norte.Accounts do
   end
 
   def get_client!(id), do: Repo.get!(Client, id)
-  def get_client(id), do: Repo.get!(Client, id)
+  def get_client(id), do: Repo.get(Client, id)
+
+  def get_user_client(%User{} = user) do
+    get_client(user.id)
+  end
 
   def new_client, do: Client.changeset(%Client{})
 

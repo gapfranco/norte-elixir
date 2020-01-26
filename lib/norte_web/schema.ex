@@ -1,5 +1,6 @@
 defmodule NorteWeb.Schema do
   use Absinthe.Schema
+  import_types(Absinthe.Type.Custom)
 
   # Types
   import_types(NorteWeb.Schema.Types.SessionTypes)
