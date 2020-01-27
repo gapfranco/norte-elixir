@@ -25,10 +25,17 @@ defmodule NorteWeb.Schema.Resolvers.UnitResolvers do
         {:error, "Invalid key"}
       else
         args = Map.put(args, :up_id, sup.id)
-        {:ok, Base.create_unit(args)}
+
+        case Base.create_unit(args) do
+          {:error, _changeset} -> {:error, "Erro"}
+          {:ok, unit} -> {:ok, unit}
+        end
       end
     else
-      {:ok, Base.create_unit(args)}
+      case Base.create_unit(args) do
+        {:error, _changeset} -> {:error, "Erro"}
+        {:ok, unit} -> {:ok, unit}
+      end
     end
   end
 end
