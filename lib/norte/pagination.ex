@@ -19,130 +19,103 @@ defmodule Norte.Pagination do
 
   def page(query, page, per_page: per_page) do
     results = query(query, page, per_page: per_page)
-    Enum.slice(results, 0, per_page)
+    count = Repo.one(from(t in subquery(query), select: count("*")))
+
+    %{
+      count: count,
+      has_next: length(results) > per_page,
+      has_prev: page > 1,
+      next_page: page + 1,
+      page: page,
+      prev_page: page - 1,
+      first: (page - 1) * per_page + 1,
+      last: Enum.min([page * per_page, count]),
+      list: Enum.slice(results, 0, per_page)
+    }
   end
 
   def list_query(q, params) do
+    opts = query_params(params)
+
     page =
       cond do
-        is_nil(params[:page]) -> 1
-        true -> params[:page]
+        is_nil(opts[:page]) -> 1
+        true -> opts[:page]
       end
 
     size =
       cond do
-        is_nil(params[:size]) -> 10
-        true -> params[:size]
+        is_nil(opts[:size]) -> 10
+        true -> opts[:size]
       end
 
-    page(q, page, per_page: size)
+    opr =
+      cond do
+        is_nil(opts[:opr]) -> "=="
+        true -> opts[:opr]
+      end
+
+    if is_nil(opts[:field]) do
+      page(q, page, per_page: size)
+    else
+      field = opts[:field]
+      value = opts[:value]
+
+      qw =
+        case opr do
+          "eq" -> from w in q, where: field(w, ^field) == ^value
+          "gt" -> from w in q, where: field(w, ^field) > ^value
+          "ge" -> from w in q, where: field(w, ^field) >= ^value
+          "lt" -> from w in q, where: field(w, ^field) < ^value
+          "le" -> from w in q, where: field(w, ^field) <= ^value
+          "lk" -> from w in q, where: ilike(field(w, ^field), ^"%#{value}%")
+        end
+
+      page(qw, page, per_page: size)
+    end
   end
 
-  # def page2(query, page, per_page: per_page) when is_binary(page) do
-  #   page(query, String.to_integer(page), per_page: per_page)
-  # end
+  def query_params(params) do
+    opts = []
 
-  # def page2(query, page, per_page: per_page) do
-  #   IO.inspect(page)
-  #   results = query(query, page, per_page: per_page)
-  #   count = Repo.one(from(t in subquery(query), select: count("*")))
-  #   Enum.slice(results, 0, per_page)
+    pg =
+      case params do
+        %{"p" => p} -> String.to_integer(p)
+        _ -> 1
+      end
 
-  #   %{
-  #     count: count,
-  #     has_next: length(results) > per_page,
-  #     has_prev: page > 1,
-  #     next_page: page + 1,
-  #     page: page,
-  #     prev_page: page - 1,
-  #     first: (page - 1) * per_page + 1,
-  #     last: Enum.min([page * per_page, count]),
-  #     list: Enum.slice(results, 0, per_page)
-  #   }
-  # end
+    opts = opts ++ [page: pg]
 
-  # def list_query2(q, params) do
-  #   opts = query_params(params)
+    sz =
+      case params do
+        %{"s" => s} -> String.to_integer(s)
+        _ -> 10
+      end
 
-  #   page =
-  #     cond do
-  #       is_nil(opts[:page]) -> 1
-  #       true -> opts[:page]
-  #     end
+    opts = opts ++ [size: sz]
 
-  #   size =
-  #     cond do
-  #       is_nil(opts[:size]) -> 10
-  #       true -> opts[:size]
-  #     end
+    f =
+      case params do
+        %{"f" => f} -> :"#{f}"
+        _ -> nil
+      end
 
-  #   opr =
-  #     cond do
-  #       is_nil(opts[:opr]) -> "=="
-  #       true -> opts[:opr]
-  #     end
+    opts = opts ++ [field: f]
 
-  #   if is_nil(opts[:field]) do
-  #     page(q, page, per_page: size)
-  #   else
-  #     field = opts[:field]
-  #     value = opts[:value]
+    c =
+      case params do
+        %{"c" => c} -> c
+        _ -> "=="
+      end
 
-  #     qw =
-  #       case opr do
-  #         "eq" -> from w in q, where: field(w, ^field) == ^value
-  #         "gt" -> from w in q, where: field(w, ^field) > ^value
-  #         "ge" -> from w in q, where: field(w, ^field) >= ^value
-  #         "lt" -> from w in q, where: field(w, ^field) < ^value
-  #         "le" -> from w in q, where: field(w, ^field) <= ^value
-  #         "lk" -> from w in q, where: ilike(field(w, ^field), ^"%#{value}%")
-  #       end
+    opts = opts ++ [opr: c]
 
-  #     page2(qw, page, per_page: size)
-  #   end
-  # end
+    v =
+      case params do
+        %{"v" => v} -> v
+        _ -> nil
+      end
 
-  # def query_params(params) do
-  #   opts = []
-
-  #   pg =
-  #     case params do
-  #       %{"p" => p} -> String.to_integer(p)
-  #       _ -> 1
-  #     end
-
-  #   opts = opts ++ [page: pg]
-
-  #   sz =
-  #     case params do
-  #       %{"s" => s} -> String.to_integer(s)
-  #       _ -> 10
-  #     end
-
-  #   opts = opts ++ [size: sz]
-
-  #   f =
-  #     case params do
-  #       %{"f" => f} -> :"#{f}"
-  #       _ -> nil
-  #     end
-
-  #   opts = opts ++ [field: f]
-
-  #   c =
-  #     case params do
-  #       %{"c" => c} -> c
-  #       _ -> "=="
-  #     end
-
-  #   opts = opts ++ [opr: c]
-
-  #   v =
-  #     case params do
-  #       %{"v" => v} -> v
-  #       _ -> nil
-  #     end
-
-  #   opts ++ [value: v]
-  # end
+    opts ++ [value: v]
+  end
 end

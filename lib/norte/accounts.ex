@@ -6,27 +6,51 @@ defmodule Norte.Accounts do
   import Ecto.Query, warn: false
   alias Norte.Repo
   alias Ecto.Multi
-  alias Norte.Pagination
 
   alias Norte.Accounts.User
 
+  @doc """
+  Returns a list of users matching the given `criteria`.
+
+  Example Criteria:
+
+  [{:offset: 20}, {:limit, 10}, {:order, :asc}, {:filter, [{:matching, "lake"}, {:wifi, true}, {:guest_count, 3}]}]
+  """
+
+  def list_users(client_id, criteria) do
+    query = from u in User, where: u.client_id == ^client_id
+
+    Enum.reduce(criteria, query, fn
+      {:limit, limit}, query ->
+        from p in query, limit: ^limit
+
+      {:offset, offset}, query ->
+        from p in query, offset: ^offset
+
+      {:filter, filters}, query ->
+        filter_with(filters, query)
+
+      {:order, order}, query ->
+        from p in query, order_by: [{^order, :uid}]
+    end)
+    |> Repo.all()
+  end
+
+  defp filter_with(filters, query) do
+    Enum.reduce(filters, query, fn
+      {:matching, term}, query ->
+        pattern = "%#{term}%"
+
+        from q in query,
+          where:
+            ilike(q.username, ^pattern) or
+              ilike(q.uid, ^pattern) or
+              ilike(q.email, ^pattern)
+    end)
+  end
+
   def list_users do
     Repo.all(User)
-  end
-
-  def list_users(client_id) do
-    q = from u in User, where: u.client_id == ^client_id
-    Repo.all(q)
-  end
-
-  def list_users_page(params) do
-    q = from u in User, order_by: u.uid
-    Pagination.list_query(q, params)
-  end
-
-  def list_users_page(client_id, params) do
-    q = from u in User, where: u.client_id == ^client_id, order_by: u.uid
-    Pagination.list_query(q, params)
   end
 
   def get_user!(id), do: Repo.get!(User, id)
@@ -82,8 +106,34 @@ defmodule Norte.Accounts do
 
   alias Norte.Accounts.Client
 
-  def list_clients do
-    Repo.all(Client)
+  def list_clients(criteria) do
+    query = from(u in Client)
+    IO.inspect(criteria)
+
+    Enum.reduce(criteria, query, fn
+      {:limit, limit}, query ->
+        from p in query, limit: ^limit
+
+      {:offset, offset}, query ->
+        from p in query, offset: ^offset
+
+      {:filter, filters}, query ->
+        filter_client_with(filters, query)
+
+      {:order, order}, query ->
+        from p in query, order_by: [{^order, :cid}]
+    end)
+    |> Repo.all()
+  end
+
+  defp filter_client_with(filters, query) do
+    Enum.reduce(filters, query, fn
+      {:matching, term}, query ->
+        pattern = "%#{term}%"
+
+        from q in query,
+          where: ilike(q.name, ^pattern)
+    end)
   end
 
   def get_client!(id), do: Repo.get!(Client, id)
@@ -133,18 +183,6 @@ defmodule Norte.Accounts do
   def datasource() do
     Dataloader.Ecto.new(Repo, query: &query/2)
   end
-
-  # def query(Booking, %{scope: :place, limit: limit}) do
-  #   Booking
-  #   |> where(state: "reserved")
-  #   |> order_by([desc: :start_date])
-  #   |> limit(^limit)
-  # end
-
-  # def query(Booking, %{scope: :user}) do
-  #   Booking
-  #   |> order_by([asc: :start_date])
-  # end
 
   def query(queryable, _) do
     queryable

@@ -7,7 +7,7 @@ defmodule Norte.Areas.Area do
     field :key, :string
     field :name, :string
     field :up_id, :id
-    field :client_id, :id
+    belongs_to(:client, Norte.Accounts.Client)
 
     timestamps()
   end
