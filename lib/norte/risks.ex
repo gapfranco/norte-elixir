@@ -14,6 +14,37 @@ defmodule Norte.Risks do
     Repo.all(q)
   end
 
+  def list_risks(client_id, criteria) do
+    query = from r in Risk, where: r.client_id == ^client_id
+
+    Enum.reduce(criteria, query, fn
+      {:limit, limit}, query ->
+        from p in query, limit: ^limit
+
+      {:offset, offset}, query ->
+        from p in query, offset: ^offset
+
+      {:filter, filters}, query ->
+        filter_with(filters, query)
+
+      {:order, order}, query ->
+        from p in query, order_by: [{^order, :key}]
+    end)
+    |> Repo.all()
+  end
+
+  defp filter_with(filters, query) do
+    Enum.reduce(filters, query, fn
+      {:matching, term}, query ->
+        pattern = "%#{term}%"
+
+        from q in query,
+          where:
+            ilike(q.name, ^pattern) or
+              ilike(q.key, ^pattern)
+    end)
+  end
+
   def list_risks_page(params) do
     q = from r in Risk, order_by: r.key
     Pagination.list_query(q, params)
@@ -23,8 +54,8 @@ defmodule Norte.Risks do
 
   def get_risk(id), do: Repo.get(Risk, id)
 
-  def get_risk_by_key(key) do
-    q = from r in Risk, where: r.key == ^key
+  def get_risk_by_key(key, client_id) do
+    q = from r in Risk, where: r.key == ^key and r.client_id == ^client_id
     Repo.one(q)
   end
 

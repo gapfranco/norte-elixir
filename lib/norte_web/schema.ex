@@ -10,6 +10,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Types.UnitTypes)
   import_types(NorteWeb.Schema.Types.AreaTypes)
   import_types(NorteWeb.Schema.Types.ProcessTypes)
+  import_types(NorteWeb.Schema.Types.RiskTypes)
 
   enum :sort_order do
     value(:asc)
@@ -22,12 +23,14 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Queries.UnitQueries)
   import_types(NorteWeb.Schema.Queries.AreaQueries)
   import_types(NorteWeb.Schema.Queries.ProcessQueries)
+  import_types(NorteWeb.Schema.Queries.RiskQueries)
 
   # Mutations
   import_types(NorteWeb.Schema.Mutations.SessionMutations)
   import_types(NorteWeb.Schema.Mutations.UnitMutations)
   import_types(NorteWeb.Schema.Mutations.AreaMutations)
   import_types(NorteWeb.Schema.Mutations.ProcessMutations)
+  import_types(NorteWeb.Schema.Mutations.RiskMutations)
 
   query do
     import_fields(:user_queries)
@@ -35,6 +38,7 @@ defmodule NorteWeb.Schema do
     import_fields(:unit_queries)
     import_fields(:area_queries)
     import_fields(:process_queries)
+    import_fields(:risk_queries)
   end
 
   mutation do
@@ -42,6 +46,7 @@ defmodule NorteWeb.Schema do
     import_fields(:unit_mutations)
     import_fields(:area_mutations)
     import_fields(:process_mutations)
+    import_fields(:risk_mutations)
   end
 
   def context(ctx) do
