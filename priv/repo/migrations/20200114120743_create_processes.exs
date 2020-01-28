@@ -11,8 +11,7 @@ defmodule Norte.Repo.Migrations.CreateProcesses do
       timestamps()
     end
 
-    create unique_index(:processes, [:key])
+    create unique_index(:processes, [:client_id, :key], name: :processes_key_index)
     create index(:processes, [:up_id])
-    create index(:processes, [:client_id])
   end
 end

@@ -18,7 +18,7 @@ defmodule Norte.Base.Unit do
     |> cast(attrs, [:key, :name, :client_id, :up_id])
     |> validate_required([:key, :name])
     |> Util.validate_key_format(:key)
-    |> unique_constraint(:key)
+    |> unique_constraint(:key, name: :units_key_index)
   end
 
   def update_changeset(unit, attrs) do

@@ -11,8 +11,7 @@ defmodule Norte.Repo.Migrations.CreateAreas do
       timestamps()
     end
 
-    create unique_index(:areas, [:key])
+    create unique_index(:areas, [:client_id, :key], name: :areas_key_index)
     create index(:areas, [:up_id])
-    create index(:areas, [:client_id])
   end
 end

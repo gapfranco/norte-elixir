@@ -14,6 +14,37 @@ defmodule Norte.Areas do
     Repo.all(q)
   end
 
+  def list_areas(client_id, criteria) do
+    query = from a in Area, where: a.client_id == ^client_id
+
+    Enum.reduce(criteria, query, fn
+      {:limit, limit}, query ->
+        from p in query, limit: ^limit
+
+      {:offset, offset}, query ->
+        from p in query, offset: ^offset
+
+      {:filter, filters}, query ->
+        filter_with(filters, query)
+
+      {:order, order}, query ->
+        from p in query, order_by: [{^order, :key}]
+    end)
+    |> Repo.all()
+  end
+
+  defp filter_with(filters, query) do
+    Enum.reduce(filters, query, fn
+      {:matching, term}, query ->
+        pattern = "%#{term}%"
+
+        from q in query,
+          where:
+            ilike(q.name, ^pattern) or
+              ilike(q.key, ^pattern)
+    end)
+  end
+
   def list_areas_page(params) do
     q = from a in Area, order_by: a.key
     Pagination.list_query(q, params)
@@ -23,8 +54,8 @@ defmodule Norte.Areas do
 
   def get_area(id), do: Repo.get(Area, id)
 
-  def get_area_by_key(key) do
-    q = from a in Area, where: a.key == ^key
+  def get_area_by_key(key, client_id) do
+    q = from a in Area, where: a.key == ^key and a.client_id == ^client_id
     Repo.one(q)
   end
 

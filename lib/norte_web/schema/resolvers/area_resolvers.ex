@@ -1,16 +1,16 @@
-defmodule NorteWeb.Schema.Resolvers.UnitResolvers do
-  alias Norte.Base
+defmodule NorteWeb.Schema.Resolvers.AreaResolvers do
+  alias Norte.Areas
   alias NorteWeb.Schema.Middleware.ChangesetErrors
 
-  def list_units(_, args, %{context: context}) do
-    {:ok, Base.list_units(context.current_user.client_id, args)}
+  def list_areas(_, args, %{context: context}) do
+    {:ok, Areas.list_areas(context.current_user.client_id, args)}
   end
 
-  def get_unit(_, %{key: key}, %{context: context}) do
-    {:ok, Base.get_unit_by_key(key, context.current_user.client_id)}
+  def get_area(_, %{key: key}, %{context: context}) do
+    {:ok, Areas.get_area_by_key(key, context.current_user.client_id)}
   end
 
-  def create_unit(_, args, %{context: context}) do
+  def create_area(_, args, %{context: context}) do
     args = Map.put(args, :client_id, context.current_user.client_id)
     pts = String.split(args.key, ".")
 
@@ -19,20 +19,20 @@ defmodule NorteWeb.Schema.Resolvers.UnitResolvers do
 
       sup =
         Enum.join(arr, ".")
-        |> Base.get_unit_by_key(context.current_user.client_id)
+        |> Areas.get_area_by_key(context.current_user.client_id)
 
       if sup === nil do
         {:error, "Invalid key"}
       else
         args = Map.put(args, :up_id, sup.id)
 
-        case Base.create_unit(args) do
+        case Areas.create_area(args) do
           {:error, _changeset} -> {:error, "Erro"}
           {:ok, unit} -> {:ok, unit}
         end
       end
     else
-      case Base.create_unit(args) do
+      case Areas.create_area(args) do
         {:error, changeset} ->
           {:error, message: "Create error", detail: ChangesetErrors.transform_errors(changeset)}
 
@@ -42,34 +42,34 @@ defmodule NorteWeb.Schema.Resolvers.UnitResolvers do
     end
   end
 
-  def update_unit(_, args, %{context: context}) do
-    unit = Base.get_unit_by_key(args.key, context.current_user.client_id)
+  def update_area(_, args, %{context: context}) do
+    area = Areas.get_area_by_key(args.key, context.current_user.client_id)
 
-    if unit === nil do
+    if area === nil do
       {:error, "Invalid key"}
     else
-      case Base.update_unit(unit, args) do
+      case Areas.update_area(area, args) do
         {:error, changeset} ->
           {:error, message: "Update error", detail: ChangesetErrors.transform_errors(changeset)}
 
-        {:ok, unit} ->
-          {:ok, unit}
+        {:ok, area} ->
+          {:ok, area}
       end
     end
   end
 
-  def delete_unit(_, args, %{context: context}) do
-    unit = Base.get_unit_by_key(args.key, context.current_user.client_id)
+  def delete_area(_, args, %{context: context}) do
+    area = Areas.get_area_by_key(args.key, context.current_user.client_id)
 
-    if unit === nil do
+    if area === nil do
       {:error, "Invalid key"}
     else
-      case Base.delete_unit(unit) do
+      case Areas.delete_area(area) do
         {:error, changeset} ->
           {:error, message: "Delete error", detail: ChangesetErrors.transform_errors(changeset)}
 
-        {:ok, unit} ->
-          {:ok, unit}
+        {:ok, area} ->
+          {:ok, area}
       end
     end
   end

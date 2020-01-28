@@ -11,8 +11,7 @@ defmodule Norte.Repo.Migrations.CreateUnits do
       timestamps()
     end
 
-    create unique_index(:units, [:key])
+    create unique_index(:units, [:client_id, :key], name: :units_key_index)
     create index(:units, [:up_id])
-    create index(:units, [:client_id])
   end
 end

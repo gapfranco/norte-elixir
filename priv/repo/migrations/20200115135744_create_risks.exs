@@ -11,8 +11,7 @@ defmodule Norte.Repo.Migrations.CreateRisks do
       timestamps()
     end
 
-    create unique_index(:risks, [:key])
+    create unique_index(:risks, [:client_id, :key], name: :risks_key_index)
     create index(:risks, [:up_id])
-    create index(:risks, [:client_id])
   end
 end
