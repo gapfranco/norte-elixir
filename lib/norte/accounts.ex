@@ -139,6 +139,11 @@ defmodule Norte.Accounts do
   def get_client!(id), do: Repo.get!(Client, id)
   def get_client(id), do: Repo.get(Client, id)
 
+  def get_client_cid(cid) do
+    q = from c in Client, where: c.cid == ^cid
+    Repo.one(q)
+  end
+
   def get_user_client(%User{} = user) do
     get_client(user.id)
   end
