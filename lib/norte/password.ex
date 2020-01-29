@@ -50,7 +50,7 @@ defmodule Norte.Password do
     end
   end
 
-  defp verify_password(password, %User{} = user) when is_binary(password) do
+  def verify_password(password, %User{} = user) when is_binary(password) do
     if verify_with_hash(password, user.password_hash) do
       {:ok, user}
     else

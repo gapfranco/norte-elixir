@@ -78,6 +78,42 @@ defmodule NorteWeb.Schema.Resolvers.SessionResolvers do
     end
   end
 
+  def change_password(
+        _,
+        %{
+          old_password: old_password,
+          password: password,
+          password_confirmation: password_confirmation
+        },
+        %{context: context}
+      ) do
+    user = Accounts.get_user_uid(context.current_user.uid, context.current_user.client_id)
+
+    case Password.verify_password(old_password, %Accounts.User{} = user) do
+      {:error, :login_error} ->
+        {:error, "Senha atual inválida"}
+
+      {:ok, _} ->
+        if user == nil do
+          {:error, "Usuário inválido"}
+        else
+          case Accounts.update_user_with_password(user, %{
+                 password: password,
+                 password_confirmation: password_confirmation,
+                 expired: false,
+                 token: nil,
+                 token_date: nil
+               }) do
+            {:ok, _} ->
+              {:ok, %{msg: "Password changed"}}
+
+            {:error, changeset} ->
+              {:error, ChangesetErrors.transform_errors(changeset)}
+          end
+        end
+    end
+  end
+
   def me(_, _, %{context: %{current_user: user}}) do
     {:ok, user}
   end

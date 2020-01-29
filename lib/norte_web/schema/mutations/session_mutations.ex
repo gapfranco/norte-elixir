@@ -2,6 +2,7 @@ defmodule NorteWeb.Schema.Mutations.SessionMutations do
   use Absinthe.Schema.Notation
 
   alias NorteWeb.Schema.Resolvers
+  alias NorteWeb.Schema.Middleware
 
   object :session_mutations do
     @desc "User sign in returning JWT token"
@@ -26,6 +27,15 @@ defmodule NorteWeb.Schema.Mutations.SessionMutations do
     field :create_password, type: :message_type do
       arg(:input, non_null(:create_password_input_type))
       resolve(&Resolvers.SessionResolvers.create_password/3)
+    end
+
+    @desc "Change password"
+    field :change_password, type: :message_type do
+      arg(:old_password, non_null(:string))
+      arg(:password, non_null(:string))
+      arg(:password_confirmation, non_null(:string))
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.SessionResolvers.change_password/3)
     end
   end
 end
