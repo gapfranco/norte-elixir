@@ -6,9 +6,9 @@ defmodule NorteWeb.Schema.Queries.UserQueries do
 
   object :user_queries do
     @desc "Get a list of all users"
-    field :users, list_of(:user_type) do
-      arg(:offset, :integer)
-      arg(:limit, :integer)
+    field :users, :paginated_users do
+      arg(:page, :integer, default_value: 1)
+      arg(:limit, :integer, default_value: 10)
       arg(:order, type: :sort_order, default_value: :asc)
       arg(:filter, :user_filter)
       middleware(Middleware.Authorize, :any)
@@ -23,9 +23,9 @@ defmodule NorteWeb.Schema.Queries.UserQueries do
     end
 
     @desc "Get a list of all clients"
-    field :clients, list_of(:client_type) do
-      arg(:offset, :integer)
-      arg(:limit, :integer)
+    field :clients, :paginated_clients do
+      arg(:page, :integer, default_value: 1)
+      arg(:limit, :integer, default_value: 10)
       arg(:order, type: :sort_order, default_value: :asc)
       arg(:filter, :user_filter)
       resolve(&Resolvers.UserResolvers.list_clients/3)

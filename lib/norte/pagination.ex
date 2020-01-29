@@ -2,6 +2,63 @@ defmodule Norte.Pagination do
   import Ecto.Query
   alias Norte.Repo
 
+  @doc """
+  Return query paginated with criteria
+
+   [{:page: 2}, {:limit, 10}, {:order, :asc}, {:filter, [{:matching, "lake"}}]}]
+
+  """
+  def paginate(query, criteria, ord, filter) do
+    cq = from(t in subquery(query), select: count("*"))
+
+    per_page = criteria.limit
+    page = criteria.page
+
+    count =
+      Enum.reduce(criteria, cq, fn
+        {:limit, _limit}, query ->
+          query
+
+        {:page, _page}, query ->
+          query
+
+        {:filter, filters}, query ->
+          filter.(filters, query)
+
+        {:order, _order}, query ->
+          query
+      end)
+      |> Repo.one()
+
+    results =
+      Enum.reduce(criteria, query, fn
+        {:limit, limit}, query ->
+          from p in query, limit: ^(limit + 1)
+
+        {:page, page}, query ->
+          from p in query, offset: ^((page - 1) * per_page)
+
+        {:filter, filters}, query ->
+          filter.(filters, query)
+
+        {:order, order}, query ->
+          from p in query, order_by: [{^order, ^ord}]
+      end)
+      |> Repo.all()
+
+    %{
+      count: count,
+      has_next: length(results) > per_page,
+      has_prev: page > 1,
+      next_page: page + 1,
+      page: page,
+      prev_page: page - 1,
+      first: (page - 1) * per_page + 1,
+      last: Enum.min([page * per_page, count]),
+      list: Enum.slice(results, 0, per_page)
+    }
+  end
+
   def query(query, page, per_page: per_page) when is_binary(page) do
     query(query, String.to_integer(page), per_page: per_page)
   end

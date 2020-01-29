@@ -6,9 +6,9 @@ defmodule NorteWeb.Schema.Queries.UnitQueries do
 
   object :unit_queries do
     @desc "Get a list of all units"
-    field :units, list_of(:unit_type) do
-      arg(:offset, :integer)
-      arg(:limit, :integer)
+    field :units, :paginated_units do
+      arg(:page, :integer, default_value: 1)
+      arg(:limit, :integer, default_value: 10)
       arg(:order, type: :sort_order, default_value: :asc)
       arg(:filter, :user_filter)
       middleware(Middleware.Authorize, :any)

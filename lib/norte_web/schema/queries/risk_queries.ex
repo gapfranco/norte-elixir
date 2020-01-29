@@ -6,9 +6,9 @@ defmodule NorteWeb.Schema.Queries.RiskQueries do
 
   object :risk_queries do
     @desc "Get a list of all risks"
-    field :risks, list_of(:risk_type) do
-      arg(:offset, :integer)
-      arg(:limit, :integer)
+    field :risks, :paginated_risks do
+      arg(:page, :integer, default_value: 1)
+      arg(:limit, :integer, default_value: 10)
       arg(:order, type: :sort_order, default_value: :asc)
       arg(:filter, :user_filter)
       middleware(Middleware.Authorize, :any)

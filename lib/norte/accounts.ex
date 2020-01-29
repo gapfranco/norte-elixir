@@ -6,34 +6,13 @@ defmodule Norte.Accounts do
   import Ecto.Query, warn: false
   alias Norte.Repo
   alias Ecto.Multi
+  alias Norte.Pagination
 
   alias Norte.Accounts.User
 
-  @doc """
-  Returns a list of users matching the given `criteria`.
-
-  Example Criteria:
-
-  [{:offset: 20}, {:limit, 10}, {:order, :asc}, {:filter, [{:matching, "lake"}, {:wifi, true}, {:guest_count, 3}]}]
-  """
-
   def list_users(client_id, criteria) do
     query = from u in User, where: u.client_id == ^client_id
-
-    Enum.reduce(criteria, query, fn
-      {:limit, limit}, query ->
-        from p in query, limit: ^limit
-
-      {:offset, offset}, query ->
-        from p in query, offset: ^offset
-
-      {:filter, filters}, query ->
-        filter_with(filters, query)
-
-      {:order, order}, query ->
-        from p in query, order_by: [{^order, :uid}]
-    end)
-    |> Repo.all()
+    Pagination.paginate(query, criteria, :uid, &filter_with/2)
   end
 
   defp filter_with(filters, query) do
@@ -108,22 +87,7 @@ defmodule Norte.Accounts do
 
   def list_clients(criteria) do
     query = from(u in Client)
-    IO.inspect(criteria)
-
-    Enum.reduce(criteria, query, fn
-      {:limit, limit}, query ->
-        from p in query, limit: ^limit
-
-      {:offset, offset}, query ->
-        from p in query, offset: ^offset
-
-      {:filter, filters}, query ->
-        filter_client_with(filters, query)
-
-      {:order, order}, query ->
-        from p in query, order_by: [{^order, :cid}]
-    end)
-    |> Repo.all()
+    Pagination.paginate(query, criteria, :cid, &filter_client_with/2)
   end
 
   defp filter_client_with(filters, query) do

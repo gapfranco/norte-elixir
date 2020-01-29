@@ -16,21 +16,7 @@ defmodule Norte.Risks do
 
   def list_risks(client_id, criteria) do
     query = from r in Risk, where: r.client_id == ^client_id
-
-    Enum.reduce(criteria, query, fn
-      {:limit, limit}, query ->
-        from p in query, limit: ^limit
-
-      {:offset, offset}, query ->
-        from p in query, offset: ^offset
-
-      {:filter, filters}, query ->
-        filter_with(filters, query)
-
-      {:order, order}, query ->
-        from p in query, order_by: [{^order, :key}]
-    end)
-    |> Repo.all()
+    Pagination.paginate(query, criteria, :key, &filter_with/2)
   end
 
   defp filter_with(filters, query) do

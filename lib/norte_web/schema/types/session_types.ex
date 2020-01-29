@@ -1,6 +1,7 @@
 defmodule NorteWeb.Schema.Types.SessionTypes do
   use Absinthe.Schema.Notation
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+
   # import Absinthe.Resolution.Helpers, only: [dataloader: 1, dataloader: 3]
 
   @desc "User and token for the session"
@@ -75,5 +76,31 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
   input_object :user_filter do
     @desc "Matching a field"
     field :matching, :string
+  end
+
+  @desc "User list paginated"
+  object :paginated_users do
+    field(:count, :integer)
+    field(:first, :integer)
+    field(:last, :integer)
+    field(:has_next, :boolean)
+    field(:has_prev, :boolean)
+    field(:next_page, :integer)
+    field(:prev_page, :integer)
+    field(:page, :integer)
+    field(:list, list_of(:user_type))
+  end
+
+  @desc "Clients list paginated"
+  object :paginated_clients do
+    field(:count, :integer)
+    field(:first, :integer)
+    field(:last, :integer)
+    field(:has_next, :boolean)
+    field(:has_prev, :boolean)
+    field(:next_page, :integer)
+    field(:prev_page, :integer)
+    field(:page, :integer)
+    field(:list, list_of(:client_type))
   end
 end
