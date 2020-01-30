@@ -37,5 +37,32 @@ defmodule NorteWeb.Schema.Mutations.SessionMutations do
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.SessionResolvers.change_password/3)
     end
+
+    @desc "Create a user"
+    field :user_create, :user_type do
+      arg(:uid, non_null(:string))
+      arg(:username, non_null(:string))
+      arg(:email, non_null(:string))
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.UserResolvers.create_user/3)
+    end
+
+    @desc "Update a user"
+    field :user_update, :user_type do
+      arg(:uid, non_null(:string))
+      arg(:username, :string)
+      arg(:email, :string)
+      arg(:admin, :boolean)
+      arg(:block, :boolean)
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.UserResolvers.update_user/3)
+    end
+
+    @desc "Delete a user"
+    field :user_delete, :user_type do
+      arg(:uid, non_null(:string))
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.UserResolvers.delete_user/3)
+    end
   end
 end

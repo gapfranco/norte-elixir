@@ -32,9 +32,9 @@ defmodule Norte.Accounts do
     Repo.all(User)
   end
 
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: Repo.get!(User, id) |> Repo.preload(:client)
 
-  def get_user(id), do: Repo.get(User, id)
+  def get_user(id), do: Repo.get(User, id) |> Repo.preload(:client)
 
   def get_user(id, client_id) do
     q = from u in User, where: u.id == ^id, where: u.client_id == ^client_id

@@ -69,6 +69,7 @@ defmodule NorteWeb.Schema.Types.SessionTypes do
     field(:email, :string)
     field(:admin, :boolean)
     field(:block, :boolean)
+    field(:expired, :boolean)
     field :client, :client_type, resolve: dataloader(Clients)
   end
 
