@@ -16,7 +16,7 @@ defmodule NorteWeb.Schema.Queries.ProcessQueries do
     end
 
     @desc "Get process by key"
-    field :process, list_of(:process_type) do
+    field :process, :process_type do
       arg(:key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.ProcessResolvers.get_process/3)

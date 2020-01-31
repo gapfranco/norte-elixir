@@ -16,7 +16,7 @@ defmodule NorteWeb.Schema.Queries.RiskQueries do
     end
 
     @desc "Get risk by key"
-    field :risk, list_of(:risk_type) do
+    field :risk, :risk_type do
       arg(:key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.RiskResolvers.get_risk/3)

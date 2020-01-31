@@ -16,7 +16,7 @@ defmodule NorteWeb.Schema.Queries.AreaQueries do
     end
 
     @desc "Get area by key"
-    field :area, list_of(:area_type) do
+    field :area, :area_type do
       arg(:key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.AreaResolvers.get_area/3)

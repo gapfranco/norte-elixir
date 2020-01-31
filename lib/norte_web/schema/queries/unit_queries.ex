@@ -16,7 +16,7 @@ defmodule NorteWeb.Schema.Queries.UnitQueries do
     end
 
     @desc "Get unit by key"
-    field :unit, list_of(:unit_type) do
+    field :unit, :unit_type do
       arg(:key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.UnitResolvers.get_unit/3)
