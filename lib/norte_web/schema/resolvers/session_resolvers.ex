@@ -15,7 +15,7 @@ defmodule NorteWeb.Schema.Resolvers.SessionResolvers do
          %{
            cid: client.cid,
            name: client.name,
-           uid: user.uid,
+           uid: "#{user.uid}@#{client.cid}",
            username: user.username,
            email: user.email
          }}
