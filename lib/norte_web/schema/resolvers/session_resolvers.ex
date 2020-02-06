@@ -9,13 +9,15 @@ defmodule NorteWeb.Schema.Resolvers.SessionResolvers do
   end
 
   def signup_user(_, %{input: input}, _) do
+    input = %{input | uid: "#{input[:uid]}@#{input[:cid]}"}
+
     case Accounts.create_client(input) do
       {:ok, %{client: client, user: user}} ->
         {:ok,
          %{
            cid: client.cid,
            name: client.name,
-           uid: "#{user.uid}@#{client.cid}",
+           uid: user.uid,
            username: user.username,
            email: user.email
          }}
