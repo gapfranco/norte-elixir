@@ -15,6 +15,20 @@ config :norte, NorteWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :norte, Norte.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: System.get_env("RENDER_SMTP_SERVER") || "smtp.mailtrap.io",
+  hostname: System.get_env("RENDER_SMTP_HOST") || "smtp.mailtrap.io",
+  port: System.get_env("RENDER_SMTP_PORT") || 2525,
+  username: System.get_env("RENDER_SMTP_USERNAME") || "52de807602f1c8",
+  password: System.get_env("RENDER_SMTP_PASSWORD") || "da2a9dc063dcaa",
+  tls: :if_available,
+  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"],
+  ssl: false,
+  retries: 1,
+  no_mx_lookups: false,
+  auth: :allways
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
