@@ -128,7 +128,7 @@ defmodule Norte.Accounts do
     Multi.new()
     |> Multi.insert(:client, Client.changeset(%Client{}, attrs))
     |> Multi.insert(:user, fn %{client: %Client{id: client_id}} ->
-      User.changeset_with_password(%User{client_id: client_id}, attrs)
+      User.changeset_with_password(%User{client_id: client_id, admin: true}, attrs)
     end)
     |> Repo.transaction()
   end
