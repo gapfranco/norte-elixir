@@ -13,6 +13,8 @@ defmodule NorteWeb.Schema.Resolvers.SessionResolvers do
 
     case Accounts.create_client(input) do
       {:ok, %{client: client, user: user}} ->
+        Email.welcome_email(user.email, user, client) |> Mailer.deliver_now()
+
         {:ok,
          %{
            cid: client.cid,

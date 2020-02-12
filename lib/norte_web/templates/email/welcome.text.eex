@@ -1,0 +1,15 @@
+Bem vindo 
+
+<%= @username%>
+
+Uma conta foi criada no cliente <%= @cid%> (<%= @name%>)
+
+O código da conta é <%= @uid%>
+
+Para se conectar:
+  
+  - Acesse o sistema
+  - Informe se código (%= uid%>) e senha
+  - Clique em *Conectar*
+
+Se esqueceu sua senha, clique em *Criar senha* e siga as instruções.

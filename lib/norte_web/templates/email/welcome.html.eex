@@ -1,0 +1,24 @@
+<h2>Bem vindo</h2>
+
+<h3><%= @username%></h3>
+
+<p>
+Uma conta foi criada no cliente <%= @cid%> (<strong><%= @name%></strong>)
+</p>
+
+<p>
+O código da conta é <strong><%= @uid%></strong>
+</p>
+
+<p>
+Para se conectar:
+  <ol>
+    <li>Acesse o sistema</li>
+    <li>Informe o código (<%= @uid%>) e a senha</li>
+    <li>Clique em <strong>Conectar</strong></li>
+  </ol>
+</p>
+
+<p>  
+Se esqueceu sua senha, clique em <strong>Criar senha</strong> e siga as instruções.
+</p>
