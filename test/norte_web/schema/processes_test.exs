@@ -1,4 +1,4 @@
-defmodule Norte.Schema.Query.UnitsTest do
+defmodule Norte.Schema.Query.ProcessesTest do
   use NorteWeb.ConnCase, async: true
   alias Norte.Password
 
@@ -25,7 +25,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @create """
   mutation($key: String!, $name: String!) {
-    unitCreate (key: $key, name: $name) {
+    processCreate (key: $key, name: $name) {
       key
       name
       client {
@@ -37,7 +37,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @update """
   mutation($key: String!, $name: String!) {
-    unitUpdate (key: $key, name: $name) {
+    processUpdate (key: $key, name: $name) {
       key
       name
     }
@@ -46,7 +46,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @delete """
   mutation($key: String!) {
-    unitDelete (key: $key) {
+    processDelete (key: $key) {
       key
     }
   }
@@ -54,7 +54,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @list """
   query {
-    units {
+    processes {
       list {
         key
       }
@@ -62,14 +62,14 @@ defmodule Norte.Schema.Query.UnitsTest do
   }
   """
 
-  describe "units maintenance" do
-    test "cannot create unit unauthenticated" do
+  describe "processes maintenance" do
+    test "cannot create process unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql", query: @create, variables: @valid_attrs)
 
       assert %{
-               "data" => %{"unitCreate" => nil},
+               "data" => %{"processCreate" => nil},
                "errors" => [
                  %{
                    "locations" => [
@@ -80,14 +80,14 @@ defmodule Norte.Schema.Query.UnitsTest do
                    ],
                    "message" => "unauthorized",
                    "path" => [
-                     "unitCreate"
+                     "processCreate"
                    ]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "create a new unit in current client" do
+    test "create a new process in current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -95,7 +95,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "unitCreate" => %{
+                 "processCreate" => %{
                    "key" => "03",
                    "name" => "test",
                    "client" => %{
@@ -113,18 +113,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         |> post("/graphql", query: @create, variables: @invalid_attrs)
 
       assert %{
-               "data" => %{"unitCreate" => nil},
+               "data" => %{"processCreate" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "Invalid key",
-                   "path" => ["unitCreate"]
+                   "path" => ["processCreate"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "list units only of current client" do
+    test "list processes only of current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -132,7 +132,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "units" => %{
+                 "processes" => %{
                    "list" => [
                      %{"key" => "01"},
                      %{"key" => "02"}
@@ -142,24 +142,24 @@ defmodule Norte.Schema.Query.UnitsTest do
              } == json_response(conn, 200)
     end
 
-    test "cannot list units unauthenticated" do
+    test "cannot list processes unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql", query: @list)
 
       assert %{
-               "data" => %{"units" => nil},
+               "data" => %{"processes" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "unauthorized",
-                   "path" => ["units"]
+                   "path" => ["processes"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "update a unit in current client" do
+    test "update a process in current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -170,7 +170,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "unitUpdate" => %{
+                 "processUpdate" => %{
                    "key" => "01",
                    "name" => "alterado"
                  }
@@ -178,7 +178,7 @@ defmodule Norte.Schema.Query.UnitsTest do
              } == json_response(conn, 200)
     end
 
-    test "cannot update units of other clients" do
+    test "cannot update processes of other clients" do
       conn =
         build_conn()
         |> conn_user()
@@ -188,18 +188,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitUpdate" => nil},
+               "data" => %{"processUpdate" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "Invalid key",
-                   "path" => ["unitUpdate"]
+                   "path" => ["processUpdate"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "cannot update units when unauthenticated" do
+    test "cannot update processes when unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql",
@@ -208,18 +208,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitUpdate" => nil},
+               "data" => %{"processUpdate" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "unauthorized",
-                   "path" => ["unitUpdate"]
+                   "path" => ["processUpdate"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "delete a unit in current client" do
+    test "delete a process in current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -230,14 +230,14 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "unitDelete" => %{
+                 "processDelete" => %{
                    "key" => "01"
                  }
                }
              } == json_response(conn, 200)
     end
 
-    test "cannot delete units of other clients" do
+    test "cannot delete processes of other clients" do
       conn =
         build_conn()
         |> conn_user()
@@ -247,18 +247,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitDelete" => nil},
+               "data" => %{"processDelete" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "Invalid key",
-                   "path" => ["unitDelete"]
+                   "path" => ["processDelete"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "cannot delete units when unauthenticated" do
+    test "cannot delete processes when unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql",
@@ -267,12 +267,12 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitDelete" => nil},
+               "data" => %{"processDelete" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "unauthorized",
-                   "path" => ["unitDelete"]
+                   "path" => ["processDelete"]
                  }
                ]
              } == json_response(conn, 200)

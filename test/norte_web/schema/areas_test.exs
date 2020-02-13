@@ -1,4 +1,4 @@
-defmodule Norte.Schema.Query.UnitsTest do
+defmodule Norte.Schema.Query.AreasTest do
   use NorteWeb.ConnCase, async: true
   alias Norte.Password
 
@@ -25,7 +25,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @create """
   mutation($key: String!, $name: String!) {
-    unitCreate (key: $key, name: $name) {
+    areaCreate (key: $key, name: $name) {
       key
       name
       client {
@@ -37,7 +37,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @update """
   mutation($key: String!, $name: String!) {
-    unitUpdate (key: $key, name: $name) {
+    areaUpdate (key: $key, name: $name) {
       key
       name
     }
@@ -46,7 +46,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @delete """
   mutation($key: String!) {
-    unitDelete (key: $key) {
+    areaDelete (key: $key) {
       key
     }
   }
@@ -54,7 +54,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
   @list """
   query {
-    units {
+    areas {
       list {
         key
       }
@@ -62,14 +62,14 @@ defmodule Norte.Schema.Query.UnitsTest do
   }
   """
 
-  describe "units maintenance" do
-    test "cannot create unit unauthenticated" do
+  describe "areas maintenance" do
+    test "cannot create area unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql", query: @create, variables: @valid_attrs)
 
       assert %{
-               "data" => %{"unitCreate" => nil},
+               "data" => %{"areaCreate" => nil},
                "errors" => [
                  %{
                    "locations" => [
@@ -80,29 +80,10 @@ defmodule Norte.Schema.Query.UnitsTest do
                    ],
                    "message" => "unauthorized",
                    "path" => [
-                     "unitCreate"
+                     "areaCreate"
                    ]
                  }
                ]
-             } == json_response(conn, 200)
-    end
-
-    test "create a new unit in current client" do
-      conn =
-        build_conn()
-        |> conn_user()
-        |> post("/graphql", query: @create, variables: @valid_attrs)
-
-      assert %{
-               "data" => %{
-                 "unitCreate" => %{
-                   "key" => "03",
-                   "name" => "test",
-                   "client" => %{
-                     "cid" => "cl1"
-                   }
-                 }
-               }
              } == json_response(conn, 200)
     end
 
@@ -113,18 +94,37 @@ defmodule Norte.Schema.Query.UnitsTest do
         |> post("/graphql", query: @create, variables: @invalid_attrs)
 
       assert %{
-               "data" => %{"unitCreate" => nil},
+               "data" => %{"areaCreate" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "Invalid key",
-                   "path" => ["unitCreate"]
+                   "path" => ["areaCreate"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "list units only of current client" do
+    test "create a new area in current client" do
+      conn =
+        build_conn()
+        |> conn_user()
+        |> post("/graphql", query: @create, variables: @valid_attrs)
+
+      assert %{
+               "data" => %{
+                 "areaCreate" => %{
+                   "key" => "03",
+                   "name" => "test",
+                   "client" => %{
+                     "cid" => "cl1"
+                   }
+                 }
+               }
+             } == json_response(conn, 200)
+    end
+
+    test "list areas only of current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -132,7 +132,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "units" => %{
+                 "areas" => %{
                    "list" => [
                      %{"key" => "01"},
                      %{"key" => "02"}
@@ -142,24 +142,24 @@ defmodule Norte.Schema.Query.UnitsTest do
              } == json_response(conn, 200)
     end
 
-    test "cannot list units unauthenticated" do
+    test "cannot list areas unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql", query: @list)
 
       assert %{
-               "data" => %{"units" => nil},
+               "data" => %{"areas" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "unauthorized",
-                   "path" => ["units"]
+                   "path" => ["areas"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "update a unit in current client" do
+    test "update a area in current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -170,7 +170,7 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "unitUpdate" => %{
+                 "areaUpdate" => %{
                    "key" => "01",
                    "name" => "alterado"
                  }
@@ -178,7 +178,7 @@ defmodule Norte.Schema.Query.UnitsTest do
              } == json_response(conn, 200)
     end
 
-    test "cannot update units of other clients" do
+    test "cannot update areas of other clients" do
       conn =
         build_conn()
         |> conn_user()
@@ -188,18 +188,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitUpdate" => nil},
+               "data" => %{"areaUpdate" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "Invalid key",
-                   "path" => ["unitUpdate"]
+                   "path" => ["areaUpdate"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "cannot update units when unauthenticated" do
+    test "cannot update areas when unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql",
@@ -208,18 +208,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitUpdate" => nil},
+               "data" => %{"areaUpdate" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "unauthorized",
-                   "path" => ["unitUpdate"]
+                   "path" => ["areaUpdate"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "delete a unit in current client" do
+    test "delete a area in current client" do
       conn =
         build_conn()
         |> conn_user()
@@ -230,14 +230,14 @@ defmodule Norte.Schema.Query.UnitsTest do
 
       assert %{
                "data" => %{
-                 "unitDelete" => %{
+                 "areaDelete" => %{
                    "key" => "01"
                  }
                }
              } == json_response(conn, 200)
     end
 
-    test "cannot delete units of other clients" do
+    test "cannot delete areas of other clients" do
       conn =
         build_conn()
         |> conn_user()
@@ -247,18 +247,18 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitDelete" => nil},
+               "data" => %{"areaDelete" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "Invalid key",
-                   "path" => ["unitDelete"]
+                   "path" => ["areaDelete"]
                  }
                ]
              } == json_response(conn, 200)
     end
 
-    test "cannot delete units when unauthenticated" do
+    test "cannot delete areas when unauthenticated" do
       conn =
         build_conn()
         |> post("/graphql",
@@ -267,12 +267,12 @@ defmodule Norte.Schema.Query.UnitsTest do
         )
 
       assert %{
-               "data" => %{"unitDelete" => nil},
+               "data" => %{"areaDelete" => nil},
                "errors" => [
                  %{
                    "locations" => [%{"column" => 0, "line" => 2}],
                    "message" => "unauthorized",
-                   "path" => ["unitDelete"]
+                   "path" => ["areaDelete"]
                  }
                ]
              } == json_response(conn, 200)
