@@ -55,20 +55,20 @@ defmodule Norte.Seeds do
     %Processes.Process{key: "02", name: "Process 1.2", client_id: client1.id} |> Repo.insert!()
 
     # Units 2
-    %Base.Unit{key: "01", name: "Unit 2.1", client_id: client2.id} |> Repo.insert!()
-    %Base.Unit{key: "02", name: "Unit 2.2", client_id: client2.id} |> Repo.insert!()
+    %Base.Unit{key: "011", name: "Unit 2.1", client_id: client2.id} |> Repo.insert!()
+    %Base.Unit{key: "021", name: "Unit 2.2", client_id: client2.id} |> Repo.insert!()
 
     # Areas 2
-    %Areas.Area{key: "01", name: "Area 2.1", client_id: client2.id} |> Repo.insert!()
-    %Areas.Area{key: "02", name: "Area 2.2", client_id: client2.id} |> Repo.insert!()
+    %Areas.Area{key: "011", name: "Area 2.1", client_id: client2.id} |> Repo.insert!()
+    %Areas.Area{key: "021", name: "Area 2.2", client_id: client2.id} |> Repo.insert!()
 
     # Risks 2
-    %Risks.Risk{key: "01", name: "Risk 2.1", client_id: client2.id} |> Repo.insert!()
-    %Risks.Risk{key: "02", name: "Risk 2.2", client_id: client2.id} |> Repo.insert!()
+    %Risks.Risk{key: "011", name: "Risk 2.1", client_id: client2.id} |> Repo.insert!()
+    %Risks.Risk{key: "021", name: "Risk 2.2", client_id: client2.id} |> Repo.insert!()
 
     # Processes 2
-    %Processes.Process{key: "01", name: "Process 2.1", client_id: client2.id} |> Repo.insert!()
-    %Processes.Process{key: "02", name: "Process 2.2", client_id: client2.id} |> Repo.insert!()
+    %Processes.Process{key: "011", name: "Process 2.1", client_id: client2.id} |> Repo.insert!()
+    %Processes.Process{key: "021", name: "Process 2.2", client_id: client2.id} |> Repo.insert!()
 
     :ok
   end
