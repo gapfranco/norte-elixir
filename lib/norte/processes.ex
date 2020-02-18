@@ -64,4 +64,14 @@ defmodule Norte.Processes do
   def change_process(%Process{} = process) do
     Process.update_changeset(process, %{})
   end
+
+  # Dataloader
+
+  def datasource() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _) do
+    queryable
+  end
 end

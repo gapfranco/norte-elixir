@@ -1,7 +1,7 @@
 defmodule NorteWeb.Schema do
   use Absinthe.Schema
 
-  alias Norte.Accounts
+  alias Norte.{Accounts, Processes, Risks, Areas}
 
   import_types(Absinthe.Type.Custom)
 
@@ -11,6 +11,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Types.AreaTypes)
   import_types(NorteWeb.Schema.Types.ProcessTypes)
   import_types(NorteWeb.Schema.Types.RiskTypes)
+  import_types(NorteWeb.Schema.Types.ItemTypes)
 
   enum :sort_order do
     value(:asc)
@@ -24,6 +25,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Queries.AreaQueries)
   import_types(NorteWeb.Schema.Queries.ProcessQueries)
   import_types(NorteWeb.Schema.Queries.RiskQueries)
+  import_types(NorteWeb.Schema.Queries.ItemQueries)
 
   # Mutations
   import_types(NorteWeb.Schema.Mutations.SessionMutations)
@@ -31,6 +33,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Mutations.AreaMutations)
   import_types(NorteWeb.Schema.Mutations.ProcessMutations)
   import_types(NorteWeb.Schema.Mutations.RiskMutations)
+  import_types(NorteWeb.Schema.Mutations.ItemMutations)
 
   query do
     import_fields(:user_queries)
@@ -39,6 +42,7 @@ defmodule NorteWeb.Schema do
     import_fields(:area_queries)
     import_fields(:process_queries)
     import_fields(:risk_queries)
+    import_fields(:item_queries)
   end
 
   mutation do
@@ -47,6 +51,7 @@ defmodule NorteWeb.Schema do
     import_fields(:area_mutations)
     import_fields(:process_mutations)
     import_fields(:risk_mutations)
+    import_fields(:item_mutations)
   end
 
   def context(ctx) do
@@ -54,6 +59,9 @@ defmodule NorteWeb.Schema do
       Dataloader.new()
       |> Dataloader.add_source(Clients, Accounts.datasource())
       |> Dataloader.add_source(Users, Accounts.datasource())
+      |> Dataloader.add_source(Processes, Processes.datasource())
+      |> Dataloader.add_source(Risks, Risks.datasource())
+      |> Dataloader.add_source(Areas, Areas.datasource())
 
     Map.put(ctx, :loader, loader)
   end

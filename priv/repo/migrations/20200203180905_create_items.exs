@@ -7,7 +7,7 @@ defmodule Norte.Repo.Migrations.CreateItens do
       add :name, :string
       add :text, :string
       add :base, :date
-      add :period, :integer
+      add :period, :string
       add :area_id, references(:areas, on_delete: :restrict)
       add :risk_id, references(:risks, on_delete: :restrict)
       add :process_id, references(:processes, on_delete: :restrict)
@@ -17,7 +17,7 @@ defmodule Norte.Repo.Migrations.CreateItens do
       timestamps()
     end
 
-    create unique_index(:items, [:client_id, :key], name: :items_client_index)
+    create unique_index(:items, [:client_id, :key], name: :items_key_index)
     create index(:items, [:area_id])
     create index(:items, [:risk_id])
     create index(:items, [:process_id])

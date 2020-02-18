@@ -64,4 +64,14 @@ defmodule Norte.Areas do
   def change_area(%Area{} = area) do
     Area.update_changeset(area, %{})
   end
+
+  # Dataloader
+
+  def datasource() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _) do
+    queryable
+  end
 end
