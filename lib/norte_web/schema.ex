@@ -59,9 +59,9 @@ defmodule NorteWeb.Schema do
       Dataloader.new()
       |> Dataloader.add_source(Clients, Accounts.datasource())
       |> Dataloader.add_source(Users, Accounts.datasource())
+      |> Dataloader.add_source(Areas, Areas.datasource())
       |> Dataloader.add_source(Processes, Processes.datasource())
       |> Dataloader.add_source(Risks, Risks.datasource())
-      |> Dataloader.add_source(Areas, Areas.datasource())
 
     Map.put(ctx, :loader, loader)
   end

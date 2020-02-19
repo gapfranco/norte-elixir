@@ -10,14 +10,14 @@ defmodule Norte.Items.Item do
     field :name, :string
     field :period, :string
     field :text, :string
-    field :area, :string, virtual: true
-    field :risk, :string, virtual: true
-    field :process, :string, virtual: true
-    field :area_id, :id
-    field :risk_id, :id
-    field :process_id, :id
+    field :area_key, :string, virtual: true
+    field :risk_key, :string, virtual: true
+    field :process_key, :string, virtual: true
     field :up_id, :id
     belongs_to(:client, Norte.Accounts.Client)
+    belongs_to(:area, Norte.Areas.Area)
+    belongs_to(:process, Norte.Processes.Process)
+    belongs_to(:risk, Norte.Risks.Risk)
 
     timestamps()
   end
@@ -35,11 +35,11 @@ defmodule Norte.Items.Item do
       :period,
       :client_id,
       :up_id,
-      :area,
+      :area_key,
       :area_id,
-      :risk,
+      :risk_key,
       :risk_id,
-      :process,
+      :process_key,
       :process_id
     ])
     |> Util.validate_key_format(:key)
@@ -60,11 +60,11 @@ defmodule Norte.Items.Item do
       :base,
       :period,
       :client_id,
-      :area,
+      :area_key,
       :area_id,
-      :risk,
+      :risk_key,
       :risk_id,
-      :process,
+      :process_key,
       :process_id
     ])
     |> get_area(item.client_id)
@@ -73,7 +73,7 @@ defmodule Norte.Items.Item do
     |> validate_required([:name])
   end
 
-  defp get_area(%Ecto.Changeset{changes: %{area: id}} = changeset, client_id) do
+  defp get_area(%Ecto.Changeset{changes: %{area_key: id}} = changeset, client_id) do
     id =
       case id do
         "null" ->
@@ -90,7 +90,7 @@ defmodule Norte.Items.Item do
 
   defp get_area(changeset, _), do: changeset
 
-  defp get_process(%Ecto.Changeset{changes: %{process: id}} = changeset, client_id) do
+  defp get_process(%Ecto.Changeset{changes: %{process_key: id}} = changeset, client_id) do
     id =
       case id do
         "null" ->
@@ -107,7 +107,7 @@ defmodule Norte.Items.Item do
 
   defp get_process(changeset, _), do: changeset
 
-  defp get_risk(%Ecto.Changeset{changes: %{risk: id}} = changeset, client_id) do
+  defp get_risk(%Ecto.Changeset{changes: %{risk_key: id}} = changeset, client_id) do
     id =
       case id do
         "null" ->

@@ -21,6 +21,9 @@ defmodule NorteWeb.Schema.Types.ItemTypes do
     field(:base, :date)
     field(:period, :string)
     field :client, :client_type, resolve: dataloader(Clients)
+    field :area, :area_type, resolve: dataloader(Norte.Areas)
+    field :risk, :risk_type, resolve: dataloader(Norte.Risks)
+    field :process, :process_type, resolve: dataloader(Norte.Processes)
   end
 
   @desc "Items list paginated"

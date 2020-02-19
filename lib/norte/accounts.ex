@@ -5,10 +5,11 @@ defmodule Norte.Accounts do
 
   import Ecto.Query, warn: false
   alias Norte.Repo
-  alias Ecto.Multi
+
   alias Norte.Pagination
 
   alias Norte.Accounts.User
+  alias Ecto.Multi
 
   def list_users(client_id, criteria) do
     query = from u in User, where: u.client_id == ^client_id
