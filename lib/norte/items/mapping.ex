@@ -21,8 +21,8 @@ defmodule Norte.Items.Mapping do
   @doc false
   def changeset(mapping, attrs) do
     mapping
-    |> cast(attrs, [:item_id, :unit_id, :user_id, :client_id])
-    |> validate_required([:item_id, :unit_id, :user_id, :client_id])
+    |> cast(attrs, [:item_id, :item_key, :unit_id, :unit_key, :user_id, :user_key, :client_id])
+    |> validate_required([:item_key, :unit_key, :user_key, :client_id])
     |> get_item(attrs.client_id)
     |> get_unit(attrs.client_id)
     |> get_user(attrs.client_id)

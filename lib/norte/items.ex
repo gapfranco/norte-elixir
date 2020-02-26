@@ -71,7 +71,22 @@ defmodule Norte.Items do
     Repo.all(Mapping)
   end
 
+  def list_mappings(client_id, item_key, criteria) do
+    item = get_item_by_key(item_key, client_id)
+    query = from m in Mapping, where: m.client_id == ^client_id and m.item_id == ^item.id
+    Pagination.paginate(query, criteria, :id, &filter_mapping_with/2)
+  end
+
+  defp filter_mapping_with(_filters, query) do
+    query
+  end
+
   def get_mapping!(id), do: Repo.get!(Mapping, id)
+
+  def get_mapping(id, client_id) do
+    q = from a in Mapping, where: a.id == ^id and a.client_id == ^client_id
+    Repo.one(q)
+  end
 
   def create_mapping(attrs \\ %{}) do
     %Mapping{}
@@ -91,5 +106,15 @@ defmodule Norte.Items do
 
   def change_mapping(%Mapping{} = mapping) do
     Mapping.changeset(mapping, %{})
+  end
+
+  # Dataloader
+
+  def datasource() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _) do
+    queryable
   end
 end

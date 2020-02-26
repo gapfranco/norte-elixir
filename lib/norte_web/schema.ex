@@ -1,7 +1,7 @@
 defmodule NorteWeb.Schema do
   use Absinthe.Schema
 
-  alias Norte.{Accounts, Processes, Risks, Areas}
+  alias Norte.{Accounts, Processes, Risks, Areas, Items}
 
   import_types(Absinthe.Type.Custom)
 
@@ -62,6 +62,7 @@ defmodule NorteWeb.Schema do
       |> Dataloader.add_source(Areas, Areas.datasource())
       |> Dataloader.add_source(Processes, Processes.datasource())
       |> Dataloader.add_source(Risks, Risks.datasource())
+      |> Dataloader.add_source(Items, Items.datasource())
 
     Map.put(ctx, :loader, loader)
   end

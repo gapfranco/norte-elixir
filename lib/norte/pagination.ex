@@ -10,7 +10,6 @@ defmodule Norte.Pagination do
   """
   def paginate(query, criteria, ord, filter) do
     cq = from(t in subquery(query), select: count("*"))
-
     per_page = criteria.limit
     page = criteria.page
 

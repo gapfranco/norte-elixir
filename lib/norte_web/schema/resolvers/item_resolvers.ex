@@ -73,4 +73,42 @@ defmodule NorteWeb.Schema.Resolvers.ItemResolvers do
       end
     end
   end
+
+  # Mappings
+
+  def list_mappings(_, %{item_key: item_key} = args, %{context: context}) do
+    {:ok, Items.list_mappings(context.current_user.client_id, item_key, args)}
+  end
+
+  def get_mapping(_, %{id: id}, %{context: context}) do
+    {:ok, Items.get_mapping(id, context.current_user.client_id)}
+  end
+
+  def create_mapping(_, args, %{context: context}) do
+    args = Map.put(args, :client_id, context.current_user.client_id)
+
+    case Items.create_mapping(args) do
+      {:error, changeset} ->
+        {:error, message: "Create error", detail: ChangesetErrors.transform_errors(changeset)}
+
+      {:ok, unit} ->
+        {:ok, unit}
+    end
+  end
+
+  def delete_mapping(_, args, %{context: context}) do
+    mapping = Items.get_mapping(args.id, context.current_user.client_id)
+
+    if mapping === nil do
+      {:error, "Invalid id"}
+    else
+      case Items.delete_mapping(mapping) do
+        {:error, changeset} ->
+          {:error, message: "Delete error", detail: ChangesetErrors.transform_errors(changeset)}
+
+        {:ok, item} ->
+          {:ok, item}
+      end
+    end
+  end
 end

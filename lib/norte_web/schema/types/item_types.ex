@@ -38,4 +38,25 @@ defmodule NorteWeb.Schema.Types.ItemTypes do
     field(:page, :integer)
     field(:list, list_of(:item_type))
   end
+
+  @desc "Mapping register"
+  object :mapping_type do
+    field(:id, :id)
+    field :client, :client_type, resolve: dataloader(Clients)
+    field :unit, :unit_type, resolve: dataloader(Norte.Units)
+    field :user, :user_type, resolve: dataloader(Users)
+  end
+
+  @desc "Mappings list paginated"
+  object :paginated_mappings do
+    field(:count, :integer)
+    field(:first, :integer)
+    field(:last, :integer)
+    field(:has_next, :boolean)
+    field(:has_prev, :boolean)
+    field(:next_page, :integer)
+    field(:prev_page, :integer)
+    field(:page, :integer)
+    field(:list, list_of(:mapping_type))
+  end
 end
