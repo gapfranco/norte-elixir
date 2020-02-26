@@ -6,7 +6,7 @@ defmodule Norte.Items do
   import Ecto.Query, warn: false
   alias Norte.Repo
 
-  alias Norte.Items.Item
+  alias Norte.Items.{Item, Mapping}
   alias Norte.Pagination
 
   def list_items do
@@ -63,5 +63,33 @@ defmodule Norte.Items do
 
   def change_item(%Item{} = item) do
     Item.update_changeset(item, %{})
+  end
+
+  # Mappings
+
+  def list_mappings do
+    Repo.all(Mapping)
+  end
+
+  def get_mapping!(id), do: Repo.get!(Mapping, id)
+
+  def create_mapping(attrs \\ %{}) do
+    %Mapping{}
+    |> Mapping.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_mapping(%Mapping{} = mapping, attrs) do
+    mapping
+    |> Mapping.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_mapping(%Mapping{} = mapping) do
+    Repo.delete(mapping)
+  end
+
+  def change_mapping(%Mapping{} = mapping) do
+    Mapping.changeset(mapping, %{})
   end
 end

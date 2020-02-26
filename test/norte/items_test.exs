@@ -69,4 +69,61 @@ defmodule Norte.ItemsTest do
       assert %Ecto.Changeset{} = Items.change_item(item)
     end
   end
+
+  describe "mappings" do
+    alias Norte.Items.Mapping
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def mapping_fixture(attrs \\ %{}) do
+      {:ok, mapping} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Items.create_mapping()
+
+      mapping
+    end
+
+    test "list_mappings/0 returns all mappings" do
+      mapping = mapping_fixture()
+      assert Items.list_mappings() == [mapping]
+    end
+
+    test "get_mapping!/1 returns the mapping with given id" do
+      mapping = mapping_fixture()
+      assert Items.get_mapping!(mapping.id) == mapping
+    end
+
+    test "create_mapping/1 with valid data creates a mapping" do
+      assert {:ok, %Mapping{} = mapping} = Items.create_mapping(@valid_attrs)
+    end
+
+    test "create_mapping/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Items.create_mapping(@invalid_attrs)
+    end
+
+    test "update_mapping/2 with valid data updates the mapping" do
+      mapping = mapping_fixture()
+      assert {:ok, %Mapping{} = mapping} = Items.update_mapping(mapping, @update_attrs)
+    end
+
+    test "update_mapping/2 with invalid data returns error changeset" do
+      mapping = mapping_fixture()
+      assert {:error, %Ecto.Changeset{}} = Items.update_mapping(mapping, @invalid_attrs)
+      assert mapping == Items.get_mapping!(mapping.id)
+    end
+
+    test "delete_mapping/1 deletes the mapping" do
+      mapping = mapping_fixture()
+      assert {:ok, %Mapping{}} = Items.delete_mapping(mapping)
+      assert_raise Ecto.NoResultsError, fn -> Items.get_mapping!(mapping.id) end
+    end
+
+    test "change_mapping/1 returns a mapping changeset" do
+      mapping = mapping_fixture()
+      assert %Ecto.Changeset{} = Items.change_mapping(mapping)
+    end
+  end
 end
