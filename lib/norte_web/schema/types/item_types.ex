@@ -43,7 +43,7 @@ defmodule NorteWeb.Schema.Types.ItemTypes do
   object :mapping_type do
     field(:id, :id)
     field :client, :client_type, resolve: dataloader(Clients)
-    field :unit, :unit_type, resolve: dataloader(Norte.Units)
+    field :unit, :unit_type, resolve: dataloader(Norte.Base)
     field :user, :user_type, resolve: dataloader(Users)
   end
 

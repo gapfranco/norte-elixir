@@ -26,6 +26,9 @@ defmodule Norte.Pagination do
 
         {:order, _order}, query ->
           query
+
+        {_, _}, query ->
+          query
       end)
       |> Repo.one()
 
@@ -42,6 +45,9 @@ defmodule Norte.Pagination do
 
         {:order, order}, query ->
           from p in query, order_by: [{^order, ^ord}]
+
+        {_, _}, query ->
+          query
       end)
       |> Repo.all()
 
