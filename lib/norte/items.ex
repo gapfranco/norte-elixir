@@ -7,6 +7,7 @@ defmodule Norte.Items do
   alias Norte.Repo
 
   alias Norte.Items.{Item, Mapping}
+  alias Norte.Base
   alias Norte.Pagination
 
   def list_items do
@@ -85,6 +86,17 @@ defmodule Norte.Items do
 
   def get_mapping(id, client_id) do
     q = from a in Mapping, where: a.id == ^id and a.client_id == ^client_id
+    Repo.one(q)
+  end
+
+  def get_mapping_by_keys(item_key, unit_key, client_id) do
+    item = get_item_by_key(item_key, client_id)
+    unit = Base.get_unit_by_key(unit_key, client_id)
+
+    q =
+      from a in Mapping,
+        where: a.item_id == ^item.id and a.unit_id == ^unit.id and a.client_id == ^client_id
+
     Repo.one(q)
   end
 

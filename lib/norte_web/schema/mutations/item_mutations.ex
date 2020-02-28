@@ -48,5 +48,23 @@ defmodule NorteWeb.Schema.Mutations.ItemMutations do
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.ItemResolvers.create_mapping/3)
     end
+
+    @desc "Update a mapping"
+    field :mapping_update, :mapping_type do
+      arg(:item_key, :string)
+      arg(:unit_key, :string)
+      arg(:user_key, :string)
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.ItemResolvers.update_mapping/3)
+    end
+
+    @desc "Delete a mapping"
+    field :mapping_delete, :mapping_type do
+      arg(:item_key, :string)
+      arg(:unit_key, :string)
+      arg(:user_key, :string)
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.ItemResolvers.delete_mapping/3)
+    end
   end
 end

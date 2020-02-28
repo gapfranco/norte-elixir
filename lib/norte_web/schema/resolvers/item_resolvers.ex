@@ -96,8 +96,30 @@ defmodule NorteWeb.Schema.Resolvers.ItemResolvers do
     end
   end
 
+  def update_mapping(_, args, %{context: context}) do
+    args = Map.put(args, :client_id, context.current_user.client_id)
+
+    mapping =
+      Items.get_mapping_by_keys(args.item_key, args.unit_key, context.current_user.client_id)
+
+    if mapping === nil do
+      {:error, "Invalid key"}
+    else
+      case Items.update_mapping(mapping, args) do
+        {:error, changeset} ->
+          {:error, message: "Update error", detail: ChangesetErrors.transform_errors(changeset)}
+
+        {:ok, item} ->
+          {:ok, item}
+      end
+    end
+  end
+
   def delete_mapping(_, args, %{context: context}) do
-    mapping = Items.get_mapping(args.id, context.current_user.client_id)
+    args = Map.put(args, :client_id, context.current_user.client_id)
+
+    mapping =
+      Items.get_mapping_by_keys(args.item_key, args.unit_key, context.current_user.client_id)
 
     if mapping === nil do
       {:error, "Invalid id"}
