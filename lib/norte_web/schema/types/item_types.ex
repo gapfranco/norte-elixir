@@ -19,7 +19,7 @@ defmodule NorteWeb.Schema.Types.ItemTypes do
     field(:name, :string)
     field(:text, :string)
     field(:base, :date)
-    field(:period, :string)
+    field(:freq, :string)
     field :client, :client_type, resolve: dataloader(Clients)
     field :area, :area_type, resolve: dataloader(Norte.Areas)
     field :risk, :risk_type, resolve: dataloader(Norte.Risks)

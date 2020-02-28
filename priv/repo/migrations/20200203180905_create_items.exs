@@ -7,7 +7,7 @@ defmodule Norte.Repo.Migrations.CreateItens do
       add :name, :string
       add :text, :string
       add :base, :date
-      add :period, :string
+      add :freq, :string
       add :area_id, references(:areas, on_delete: :restrict)
       add :risk_id, references(:risks, on_delete: :restrict)
       add :process_id, references(:processes, on_delete: :restrict)

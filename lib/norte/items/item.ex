@@ -8,7 +8,7 @@ defmodule Norte.Items.Item do
     field :base, :date
     field :key, :string
     field :name, :string
-    field :period, :string
+    field :freq, :string
     field :text, :string
     field :area_key, :string, virtual: true
     field :risk_key, :string, virtual: true
@@ -24,7 +24,7 @@ defmodule Norte.Items.Item do
 
   @doc false
   def changeset(item, attrs) do
-    attrs = Map.update(attrs, :period, nil, &Atom.to_string/1)
+    attrs = Map.update(attrs, :freq, nil, &Util.atom_field/1)
 
     item
     |> cast(attrs, [
@@ -32,7 +32,7 @@ defmodule Norte.Items.Item do
       :name,
       :text,
       :base,
-      :period,
+      :freq,
       :client_id,
       :up_id,
       :area_key,
@@ -51,14 +51,14 @@ defmodule Norte.Items.Item do
   end
 
   def update_changeset(item, attrs) do
-    attrs = Map.update(attrs, :period, item.period, &Atom.to_string/1)
+    attrs = Map.update(attrs, :freq, nil, &Util.atom_field/1)
 
     item
     |> cast(attrs, [
       :name,
       :text,
       :base,
-      :period,
+      :freq,
       :client_id,
       :area_key,
       :area_id,

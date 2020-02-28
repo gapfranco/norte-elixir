@@ -6,9 +6,21 @@ defmodule Norte.ItemsTest do
   describe "itens" do
     alias Norte.Items.Item
 
-    @valid_attrs %{base: ~D[2010-04-17], key: "some key", name: "some name", period: 42, text: "some text"}
-    @update_attrs %{base: ~D[2011-05-18], key: "some updated key", name: "some updated name", period: 43, text: "some updated text"}
-    @invalid_attrs %{base: nil, key: nil, name: nil, period: nil, text: nil}
+    @valid_attrs %{
+      base: ~D[2010-04-17],
+      key: "some key",
+      name: "some name",
+      freq: 42,
+      text: "some text"
+    }
+    @update_attrs %{
+      base: ~D[2011-05-18],
+      key: "some updated key",
+      name: "some updated name",
+      freq: 43,
+      text: "some updated text"
+    }
+    @invalid_attrs %{base: nil, key: nil, name: nil, freq: nil, text: nil}
 
     def item_fixture(attrs \\ %{}) do
       {:ok, item} =
@@ -34,7 +46,7 @@ defmodule Norte.ItemsTest do
       assert item.base == ~D[2010-04-17]
       assert item.key == "some key"
       assert item.name == "some name"
-      assert item.period == 42
+      assert item.freq == 42
       assert item.text == "some text"
     end
 
@@ -48,7 +60,7 @@ defmodule Norte.ItemsTest do
       assert item.base == ~D[2011-05-18]
       assert item.key == "some updated key"
       assert item.name == "some updated name"
-      assert item.period == 43
+      assert item.freq == 43
       assert item.text == "some updated text"
     end
 

@@ -18,4 +18,14 @@ defmodule Norte.Util do
       false
     end
   end
+
+  def atom_field(field) do
+    ret = Atom.to_string(field)
+
+    if ret == "nil" do
+      nil
+    else
+      ret
+    end
+  end
 end
