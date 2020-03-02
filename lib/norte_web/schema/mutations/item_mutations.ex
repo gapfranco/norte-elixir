@@ -62,7 +62,6 @@ defmodule NorteWeb.Schema.Mutations.ItemMutations do
     field :mapping_delete, :mapping_type do
       arg(:item_key, :string)
       arg(:unit_key, :string)
-      arg(:user_key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.ItemResolvers.delete_mapping/3)
     end

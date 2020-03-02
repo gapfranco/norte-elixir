@@ -26,6 +26,7 @@ defmodule Norte.Items.Mapping do
     |> get_item(attrs.client_id)
     |> get_unit(attrs.client_id)
     |> get_user(attrs.client_id)
+    |> unique_constraint(:unit_id, name: :mappings_units_index)
   end
 
   defp get_item(%Ecto.Changeset{changes: %{item_key: id}} = changeset, client_id) do
