@@ -9,7 +9,7 @@ defmodule NorteWeb.Schema.Mutations.ItemMutations do
     field :item_create, :item_type do
       arg(:key, non_null(:string))
       arg(:name, non_null(:string))
-      arg(:text, :string)
+      arg(:text, non_null(:string))
       arg(:freq, type: :frequency)
       arg(:base, :date)
       arg(:area_key, :string)

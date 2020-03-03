@@ -24,7 +24,11 @@ defmodule Norte.Items.Item do
 
   @doc false
   def changeset(item, attrs) do
-    attrs = Map.update(attrs, :freq, nil, &Util.atom_field/1)
+    attrs =
+      Map.update(attrs, :freq, nil, &Util.atom_field/1)
+      |> check_area()
+      |> check_risk()
+      |> check_process()
 
     item
     |> cast(attrs, [
@@ -44,14 +48,15 @@ defmodule Norte.Items.Item do
     ])
     |> Util.validate_key_format(:key)
     |> validate_required([:key, :name])
-    |> get_area(attrs.client_id)
-    |> get_risk(attrs.client_id)
-    |> get_process(attrs.client_id)
     |> unique_constraint(:key, name: :items_key_index)
   end
 
   def update_changeset(item, attrs) do
-    attrs = Map.update(attrs, :freq, nil, &Util.atom_field/1)
+    attrs =
+      Map.update(attrs, :freq, nil, &Util.atom_field/1)
+      |> check_area()
+      |> check_risk()
+      |> check_process()
 
     item
     |> cast(attrs, [
@@ -67,60 +72,51 @@ defmodule Norte.Items.Item do
       :process_key,
       :process_id
     ])
-    |> get_area(item.client_id)
-    |> get_risk(item.client_id)
-    |> get_process(item.client_id)
     |> validate_required([:name])
   end
 
-  defp get_area(%Ecto.Changeset{changes: %{area_key: id}} = changeset, client_id) do
-    id =
-      case id do
-        "null" ->
-          nil
+  defp check_area(attrs) do
+    case Map.fetch(attrs, :area_key) do
+      {:ok, _} ->
+        if attrs.area_key !== nil do
+          reg = Areas.get_area_by_key(attrs.area_key, attrs.client_id)
+          Map.put(attrs, :area_id, reg.id)
+        else
+          Map.put(attrs, :area_id, nil)
+        end
 
-        _ ->
-          reg = Areas.get_area_by_key(id, client_id)
-          reg.id
-      end
-
-    changeset
-    |> put_change(:area_id, id)
+      _ ->
+        attrs
+    end
   end
 
-  defp get_area(changeset, _), do: changeset
+  defp check_risk(attrs) do
+    case Map.fetch(attrs, :risk_key) do
+      {:ok, _} ->
+        if attrs.risk_key !== nil do
+          reg = Risks.get_risk_by_key(attrs.risk_key, attrs.client_id)
+          Map.put(attrs, :risk_id, reg.id)
+        else
+          Map.put(attrs, :risk_id, nil)
+        end
 
-  defp get_process(%Ecto.Changeset{changes: %{process_key: id}} = changeset, client_id) do
-    id =
-      case id do
-        "null" ->
-          nil
-
-        _ ->
-          reg = Processes.get_process_by_key(id, client_id)
-          reg.id
-      end
-
-    changeset
-    |> put_change(:process_id, id)
+      _ ->
+        attrs
+    end
   end
 
-  defp get_process(changeset, _), do: changeset
+  defp check_process(attrs) do
+    case Map.fetch(attrs, :process_key) do
+      {:ok, _} ->
+        if attrs.process_key !== nil do
+          reg = Processes.get_process_by_key(attrs.process_key, attrs.client_id)
+          Map.put(attrs, :process_id, reg.id)
+        else
+          Map.put(attrs, :process_id, nil)
+        end
 
-  defp get_risk(%Ecto.Changeset{changes: %{risk_key: id}} = changeset, client_id) do
-    id =
-      case id do
-        "null" ->
-          nil
-
-        _ ->
-          reg = Risks.get_risk_by_key(id, client_id)
-          reg.id
-      end
-
-    changeset
-    |> put_change(:risk_id, id)
+      _ ->
+        attrs
+    end
   end
-
-  defp get_risk(changeset, _), do: changeset
 end

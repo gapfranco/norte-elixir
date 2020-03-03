@@ -43,6 +43,7 @@ defmodule NorteWeb.Schema.Resolvers.ItemResolvers do
   end
 
   def update_item(_, args, %{context: context}) do
+    args = Map.put(args, :client_id, context.current_user.client_id)
     item = Items.get_item_by_key(args.key, context.current_user.client_id)
 
     if item === nil do
