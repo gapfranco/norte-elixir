@@ -12,6 +12,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Types.ProcessTypes)
   import_types(NorteWeb.Schema.Types.RiskTypes)
   import_types(NorteWeb.Schema.Types.ItemTypes)
+  import_types(NorteWeb.Schema.Types.RatingTypes)
 
   enum :sort_order do
     value(:asc)
@@ -26,6 +27,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Queries.ProcessQueries)
   import_types(NorteWeb.Schema.Queries.RiskQueries)
   import_types(NorteWeb.Schema.Queries.ItemQueries)
+  import_types(NorteWeb.Schema.Queries.RatingQueries)
 
   # Mutations
   import_types(NorteWeb.Schema.Mutations.SessionMutations)
@@ -34,6 +36,7 @@ defmodule NorteWeb.Schema do
   import_types(NorteWeb.Schema.Mutations.ProcessMutations)
   import_types(NorteWeb.Schema.Mutations.RiskMutations)
   import_types(NorteWeb.Schema.Mutations.ItemMutations)
+  import_types(NorteWeb.Schema.Mutations.RatingMutations)
 
   query do
     import_fields(:user_queries)
@@ -43,6 +46,7 @@ defmodule NorteWeb.Schema do
     import_fields(:process_queries)
     import_fields(:risk_queries)
     import_fields(:item_queries)
+    import_fields(:rating_queries)
   end
 
   mutation do
@@ -52,6 +56,7 @@ defmodule NorteWeb.Schema do
     import_fields(:process_mutations)
     import_fields(:risk_mutations)
     import_fields(:item_mutations)
+    import_fields(:rating_mutations)
   end
 
   def context(ctx) do
@@ -64,6 +69,7 @@ defmodule NorteWeb.Schema do
       |> Dataloader.add_source(Processes, Processes.datasource())
       |> Dataloader.add_source(Risks, Risks.datasource())
       |> Dataloader.add_source(Items, Items.datasource())
+      |> Dataloader.add_source(Ratings, Ratings.datasource())
 
     Map.put(ctx, :loader, loader)
   end
