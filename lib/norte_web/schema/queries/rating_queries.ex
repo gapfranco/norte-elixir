@@ -7,7 +7,7 @@ defmodule NorteWeb.Schema.Queries.RatingQueries do
   object :rating_queries do
     @desc "Get a list of all ratings"
     field :ratings, :paginated_ratings do
-      arg(:uid, non_null(:string))
+      arg(:user_id, non_null(:id))
       arg(:page, :integer, default_value: 1)
       arg(:limit, :integer, default_value: 10)
       arg(:order, type: :sort_order, default_value: :asc)

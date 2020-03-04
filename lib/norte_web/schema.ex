@@ -1,7 +1,7 @@
 defmodule NorteWeb.Schema do
   use Absinthe.Schema
 
-  alias Norte.{Accounts, Base, Processes, Risks, Areas, Items}
+  alias Norte.{Accounts, Base, Processes, Risks, Areas, Items, Ratings}
 
   import_types(Absinthe.Type.Custom)
 

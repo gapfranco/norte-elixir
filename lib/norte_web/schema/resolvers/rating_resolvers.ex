@@ -3,7 +3,7 @@ defmodule NorteWeb.Schema.Resolvers.RatingResolvers do
   alias NorteWeb.Schema.Middleware.ChangesetErrors
 
   def list_ratings(_, args, %{context: context}) do
-    {:ok, Ratings.list_ratings(args.uid, context.current_user.client_id, args)}
+    {:ok, Ratings.list_ratings(args.user_id, context.current_user.client_id, args)}
   end
 
   def get_rating(_, %{id: id}, %{context: context}) do
