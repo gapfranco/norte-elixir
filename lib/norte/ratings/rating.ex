@@ -1,6 +1,7 @@
 defmodule Norte.Ratings.Rating do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Norte.Util
 
   schema "ratings" do
     field :date_due, :date
@@ -21,6 +22,8 @@ defmodule Norte.Ratings.Rating do
 
   @doc false
   def changeset(rating, attrs) do
+    attrs = Map.update(attrs, :result, nil, &Util.atom_field/1) |> check_result()
+
     rating
     |> cast(attrs, [
       :item_id,
@@ -36,5 +39,20 @@ defmodule Norte.Ratings.Rating do
       :client_id
     ])
     |> validate_required([:item_id, :date_due, :unit_id, :user_id, :client_id])
+    |> unique_constraint(:item_id, name: :ratings_units_index)
+  end
+
+  defp check_result(attrs) do
+    case Map.fetch(attrs, :result) do
+      {:ok, _} ->
+        if attrs.result !== nil do
+          Map.put(attrs, :date_ok, Date.utc_today())
+        else
+          Map.put(attrs, :date_ok, nil)
+        end
+
+      _ ->
+        attrs
+    end
   end
 end

@@ -7,6 +7,7 @@ defmodule Norte.Ratings do
   alias Norte.Repo
 
   alias Norte.Ratings.Rating
+  alias Norte.Items
   alias Norte.Pagination
 
   def list_ratings do
@@ -28,6 +29,14 @@ defmodule Norte.Ratings do
   end
 
   def create_rating(attrs \\ %{}) do
+    item = Items.get_item(attrs.item_id)
+
+    attrs =
+      attrs
+      |> Map.put(:area_id, item.area_id)
+      |> Map.put(:risk_id, item.risk_id)
+      |> Map.put(:process_id, item.process_id)
+
     %Rating{}
     |> Rating.changeset(attrs)
     |> Repo.insert()

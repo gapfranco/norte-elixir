@@ -22,6 +22,8 @@ defmodule Norte.Repo.Migrations.CreateRatings do
              name: :ratings_user_index
            )
 
+    create unique_index(:ratings, [:item_id, :unit_id, :date_due], name: :ratings_units_index)
+
     create index(:ratings, [:item_id])
     create index(:ratings, [:unit_id])
     create index(:ratings, [:user_id])
