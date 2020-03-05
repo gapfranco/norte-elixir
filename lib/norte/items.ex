@@ -8,6 +8,7 @@ defmodule Norte.Items do
 
   alias Norte.Items.{Item, Mapping}
   alias Norte.Base
+  alias Norte.Ratings
   alias Norte.Pagination
 
   def list_items do
@@ -118,6 +119,46 @@ defmodule Norte.Items do
 
   def change_mapping(%Mapping{} = mapping) do
     Mapping.changeset(mapping, %{})
+  end
+
+  def process_items(client_id) do
+    query =
+      from a in Item,
+        where: a.client_id == ^client_id and not is_nil(a.base) and not is_nil(a.freq)
+
+    for item <- Repo.all(query) do
+      generate(item)
+    end
+  end
+
+  defp generate(item) do
+    new_base = Norte.Util.new_date(item.base, item.freq)
+
+    if new_base == Timex.today() do
+      processa(item, new_base)
+    end
+  end
+
+  defp processa(item, date) do
+    query =
+      from a in Mapping,
+        where: a.item_id == ^item.id
+
+    for mapping <- Repo.all(query) do
+      rating = %{
+        item_id: mapping.item_id,
+        unit_id: mapping.unit_id,
+        user_id: mapping.user_id,
+        client_id: mapping.client_id,
+        date_due: date
+      }
+
+      Ratings.create_rating(rating)
+    end
+
+    :ok
+    # args = Map.put(item, :date_due, date)
+    # update_item(item, args)
   end
 
   # Dataloader

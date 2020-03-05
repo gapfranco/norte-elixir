@@ -1,5 +1,6 @@
 defmodule Norte.Util do
   import Ecto.Changeset
+  use Timex
 
   def validate_key_format(changeset, field) do
     validate_change(changeset, field, fn _field, value ->
@@ -26,6 +27,18 @@ defmodule Norte.Util do
       nil
     else
       ret
+    end
+  end
+
+  def new_date(date, frequency) do
+    case frequency do
+      "diario" -> Timex.shift(date, days: 1)
+      "semanal" -> Timex.shift(date, weeks: 1)
+      "mensal" -> Timex.shift(date, months: 1)
+      "bimestral" -> Timex.shift(date, months: 2)
+      "trimestral" -> Timex.shift(date, months: 3)
+      "semestral" -> Timex.shift(date, months: 6)
+      "anual" -> Timex.shift(date, years: 1)
     end
   end
 end
