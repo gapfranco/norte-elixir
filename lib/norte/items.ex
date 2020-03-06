@@ -4,6 +4,7 @@ defmodule Norte.Items do
   """
 
   import Ecto.Query, warn: false
+  import Ecto.Changeset
   alias Norte.Repo
 
   alias Norte.Items.{Item, Mapping}
@@ -121,20 +122,26 @@ defmodule Norte.Items do
     Mapping.changeset(mapping, %{})
   end
 
-  def process_items(client_id) do
+  def process_items(client_id, base \\ nil) do
     query =
       from a in Item,
         where: a.client_id == ^client_id and not is_nil(a.base) and not is_nil(a.freq)
 
     for item <- Repo.all(query) do
-      generate(item)
+      generate(item, base)
     end
   end
 
-  defp generate(item) do
+  defp generate(item, base) do
     new_base = Norte.Util.new_date(item.base, item.freq)
 
-    if new_base == Timex.today() do
+    ref =
+      case base do
+        nil -> Timex.today()
+        _ -> base
+      end
+
+    if new_base == ref do
       processa(item, new_base)
     end
   end
@@ -157,8 +164,8 @@ defmodule Norte.Items do
     end
 
     :ok
-    # args = Map.put(item, :date_due, date)
-    # update_item(item, args)
+    changeset = change(item, base: date)
+    Repo.update(changeset)
   end
 
   # Dataloader
