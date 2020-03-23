@@ -14,8 +14,12 @@ defmodule Norte.Ratings do
     Repo.all(Rating)
   end
 
-  def list_ratings(client_id, user_id, criteria) do
-    query = from a in Rating, where: a.client_id == ^client_id and a.user_id == ^user_id
+  def list_ratings(user_id, client_id, criteria) do
+    query =
+      from a in Rating,
+        order_by: [desc: a.date_due, desc: a.id],
+        where: a.client_id == ^client_id and a.user_id == ^user_id
+
     Pagination.paginate(query, criteria, :date_due, &filter_with/2)
   end
 

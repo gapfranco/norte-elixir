@@ -5,7 +5,7 @@ defmodule NorteWeb.Schema.Mutations.RatingMutations do
   alias NorteWeb.Schema.Middleware
 
   object :rating_mutations do
-    @desc "Create a rating"
+    @desc "Create rating"
     field :rating_create, :rating_type do
       arg(:item_id, non_null(:id))
       arg(:unit_id, non_null(:id))
@@ -15,7 +15,7 @@ defmodule NorteWeb.Schema.Mutations.RatingMutations do
       resolve(&Resolvers.RatingResolvers.create_rating/3)
     end
 
-    @desc "Update an item"
+    @desc "Update rating"
     field :rating_update, :rating_type do
       arg(:id, non_null(:id))
       arg(:result, type: :results)
@@ -24,7 +24,7 @@ defmodule NorteWeb.Schema.Mutations.RatingMutations do
       resolve(&Resolvers.RatingResolvers.update_rating/3)
     end
 
-    @desc "Delete an item"
+    @desc "Delete rating"
     field :rating_delete, :rating_type do
       arg(:id, non_null(:id))
       middleware(Middleware.Authorize, :any)
