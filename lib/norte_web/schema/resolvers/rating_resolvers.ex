@@ -6,6 +6,10 @@ defmodule NorteWeb.Schema.Resolvers.RatingResolvers do
     {:ok, Ratings.list_ratings(context.current_user.id, context.current_user.client_id, args)}
   end
 
+  def list_all_ratings(_, args, %{context: context}) do
+    {:ok, Ratings.list_ratings(context.current_user.client_id, args)}
+  end
+
   def get_rating(_, %{id: id}, %{context: context}) do
     {:ok, Ratings.get_rating(id, context.current_user.client_id)}
   end

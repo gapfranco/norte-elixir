@@ -7,6 +7,9 @@ defmodule Norte.Repo.Migrations.CreateRatings do
       add :date_ok, :date
       add :result, :string
       add :notes, :string
+      add :uid, :string
+      add :unit_key, :string
+      add :item_key, :string
       add :item_id, references(:items, on_delete: :restrict)
       add :unit_id, references(:units, on_delete: :restrict)
       add :user_id, references(:users, on_delete: :restrict)

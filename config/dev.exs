@@ -1,21 +1,21 @@
 use Mix.Config
 
 # Configure your database
-# config :norte, Norte.Repo,
-#   username: "gapfranco",
-#   password: "",
-#   database: "norte_dev",
-#   hostname: "localhost",
-#   show_sensitive_data_on_connection_error: true,
-#   pool_size: 10
-
 config :norte, Norte.Repo,
-  username: "postgres",
-  password: "area51",
+  username: "gapfranco",
+  password: "",
   database: "norte_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
+
+# config :norte, Norte.Repo,
+#   username: "postgres",
+#   password: "area51",
+#   database: "norte_dev",
+#   hostname: "localhost",
+#   show_sensitive_data_on_connection_error: true,
+#   pool_size: 10
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

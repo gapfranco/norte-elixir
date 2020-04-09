@@ -1,6 +1,7 @@
 defmodule Norte.Ratings.Rating do
   use Ecto.Schema
   import Ecto.Changeset
+
   alias Norte.Util
 
   schema "ratings" do
@@ -8,7 +9,9 @@ defmodule Norte.Ratings.Rating do
     field :date_ok, :date
     field :result, :string
     field :notes, :string
-
+    field :uid, :string
+    field :item_key, :string
+    field :unit_key, :string
     belongs_to(:item, Norte.Items.Item)
     belongs_to(:unit, Norte.Base.Unit)
     belongs_to(:user, Norte.Accounts.User)
@@ -33,6 +36,9 @@ defmodule Norte.Ratings.Rating do
       :date_ok,
       :result,
       :notes,
+      :uid,
+      :item_key,
+      :unit_key,
       :area_id,
       :risk_id,
       :process_id,
