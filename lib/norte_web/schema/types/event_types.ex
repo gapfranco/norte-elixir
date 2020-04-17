@@ -1,22 +1,15 @@
-defmodule NorteWeb.Schema.Types.RatingTypes do
+defmodule NorteWeb.Schema.Types.EventTypes do
   use Absinthe.Schema.Notation
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  enum :results do
-    value(:conforme)
-    value(:falhou)
-  end
-
-  @desc "Rating register"
-  object :rating_type do
+  @desc "Event register"
+  object :event_type do
     field(:id, :id)
-    field(:date_due, :date)
-    field(:date_ok, :date)
-    field(:result, :string)
-    field(:notes, :string)
+    field(:event_date, :date)
+    field(:text, :string)
+    field(:uid, :string)
     field(:item_key, :string)
     field(:item_name, :string)
-    field(:item_text, :string)
     field(:unit_key, :string)
     field(:unit_name, :string)
     field(:area_key, :string)
@@ -25,13 +18,12 @@ defmodule NorteWeb.Schema.Types.RatingTypes do
     field(:risk_name, :string)
     field(:process_key, :string)
     field(:process_name, :string)
-    field(:uid, :string)
     field :user, :user_type, resolve: dataloader(Users)
     field :client, :client_type, resolve: dataloader(Clients)
   end
 
-  @desc "Ratings list paginated"
-  object :paginated_ratings do
+  @desc "Events list paginated"
+  object :paginated_events do
     field(:count, :integer)
     field(:first, :integer)
     field(:last, :integer)
@@ -40,6 +32,6 @@ defmodule NorteWeb.Schema.Types.RatingTypes do
     field(:next_page, :integer)
     field(:prev_page, :integer)
     field(:page, :integer)
-    field(:list, list_of(:rating_type))
+    field(:list, list_of(:event_type))
   end
 end

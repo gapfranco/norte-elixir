@@ -4,18 +4,21 @@ defmodule Norte.Events.Event do
 
   schema "events" do
     field :event_date, :date
-    field :key, :string
-    field :name, :string
     field :text, :string
     field :uid, :string
+    field :item_key, :string
+    field :item_name, :string
     field :unit_key, :string
-    belongs_to(:user, Norte.Accounts.User)
-    belongs_to(:unit, Norte.Base.Unit)
-    belongs_to(:client, Norte.Accounts.Client)
-    belongs_to(:area, Norte.Areas.Area)
-    belongs_to(:process, Norte.Processes.Process)
-    belongs_to(:risk, Norte.Risks.Risk)
+    field :unit_name, :string
+    field :area_key, :string
+    field :area_name, :string
+    field :risk_key, :string
+    field :risk_name, :string
+    field :process_key, :string
+    field :process_name, :string
 
+    belongs_to(:user, Norte.Accounts.User)
+    belongs_to(:client, Norte.Accounts.Client)
     timestamps()
   end
 
@@ -24,23 +27,27 @@ defmodule Norte.Events.Event do
     event
     |> cast(attrs, [
       :event_date,
-      :key,
-      :name,
       :text,
       :uid,
+      :item_key,
+      :item_name,
       :unit_key,
-      :unit_id,
-      :area_id,
-      :risk_id,
-      :process_id,
+      :unit_name,
+      :area_key,
+      :area_name,
+      :risk_key,
+      :risk_name,
+      :process_key,
+      :process_name,
       :user_id,
       :client_id
     ])
     |> validate_required([
       :event_date,
-      :name,
+      :item_name,
       :text,
-      :unit_id,
+      :unit_key,
+      :unit_name,
       :user_id,
       :client_id
     ])

@@ -20,7 +20,7 @@ defmodule Norte.Ratings do
   def list_ratings(client_id, criteria) do
     query =
       from a in Rating,
-        order_by: [a.unit_id, desc: a.date_due, desc: a.id],
+        order_by: [a.unit_key, desc: a.date_due, desc: a.id],
         where: a.client_id == ^client_id and not is_nil(a.result)
 
     Pagination.paginate(query, criteria, :date_due, &filter_with_all/2)
@@ -72,7 +72,10 @@ defmodule Norte.Ratings do
       |> Map.put(:risk_id, item.risk_id)
       |> Map.put(:process_id, item.process_id)
       |> Map.put(:item_key, item.key)
+      |> Map.put(:item_name, item.name)
+      |> Map.put(:item_text, item.text)
       |> Map.put(:unit_key, unit.key)
+      |> Map.put(:unit_name, unit.name)
       |> Map.put(:uid, user.uid)
 
     %Rating{}
