@@ -26,6 +26,7 @@ defmodule Norte.Ratings.Rating do
     field :process_name, :string
     belongs_to(:user, Norte.Accounts.User)
     belongs_to(:client, Norte.Accounts.Client)
+    belongs_to(:alert_user, Norte.Accounts.User, foreign_key: :alert_user_id)
 
     timestamps()
   end
@@ -59,6 +60,7 @@ defmodule Norte.Ratings.Rating do
       :process_key,
       :process_name,
       :user_id,
+      :alert_user_id,
       :client_id
     ])
     |> validate_required([

@@ -9,6 +9,8 @@ defmodule Norte.Events do
   alias Norte.Events.Event
   alias Norte.Pagination
   alias Norte.Ratings
+  alias Norte.Accounts
+  alias Norte.{Email, Mailer}
 
   def list_events do
     Repo.all(Event)
@@ -30,10 +32,17 @@ defmodule Norte.Events do
 
         from q in query,
           where:
-            ilike(q.name, ^pattern) or
-              ilike(q.uid, ^pattern) or
+            ilike(q.uid, ^pattern) or
               ilike(q.item_key, ^pattern) or
-              ilike(q.unit_key, ^pattern)
+              ilike(q.item_name, ^pattern) or
+              ilike(q.unit_key, ^pattern) or
+              ilike(q.unit_name, ^pattern) or
+              ilike(q.risk_key, ^pattern) or
+              ilike(q.area_key, ^pattern) or
+              ilike(q.process_key, ^pattern) or
+              ilike(q.risk_name, ^pattern) or
+              ilike(q.area_name, ^pattern) or
+              ilike(q.process_name, ^pattern)
 
         # or
         #   ilike(q.key, ^pattern)
@@ -87,9 +96,17 @@ defmodule Norte.Events do
       client_id: client_id
     }
 
-    %Event{}
-    |> Event.changeset(attrs)
-    |> Repo.insert()
+    event =
+      %Event{}
+      |> Event.changeset(attrs)
+      |> Repo.insert()
+
+    if rating.alert_user_id do
+      user = Accounts.get_user(rating.alert_user_id)
+      Email.alert_event_email(user.email, attrs) |> Mailer.deliver_now()
+    end
+
+    event
   end
 
   def update_event(%Event{} = event, attrs) do

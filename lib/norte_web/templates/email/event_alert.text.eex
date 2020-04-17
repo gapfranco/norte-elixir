@@ -1,0 +1,16 @@
+Ocorrência de Não Conformidade 
+
+NOME
+<%= @item_key%> - <%= @item_name%>
+
+UNIDADE
+<%= @unit_key%> - <%= @unit_name%>
+
+RESPONSÁVEL
+<%= @uid%>
+
+DATA
+<%= @event_date%>
+
+DESCRIÇÃO
+<%= @text%>

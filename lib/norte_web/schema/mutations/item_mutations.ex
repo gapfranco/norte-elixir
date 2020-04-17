@@ -45,6 +45,7 @@ defmodule NorteWeb.Schema.Mutations.ItemMutations do
       arg(:item_key, :string)
       arg(:unit_key, :string)
       arg(:user_key, :string)
+      arg(:alert_user_key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.ItemResolvers.create_mapping/3)
     end
@@ -54,6 +55,7 @@ defmodule NorteWeb.Schema.Mutations.ItemMutations do
       arg(:item_key, :string)
       arg(:unit_key, :string)
       arg(:user_key, :string)
+      arg(:alert_user_key, :string)
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.ItemResolvers.update_mapping/3)
     end

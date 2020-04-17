@@ -44,4 +44,36 @@ defmodule Norte.Email do
       name: client.name
     )
   end
+
+  def alert_event_text_email(email_address, event) do
+    new_email()
+    |> to(email_address)
+    |> from("norte@m2iapp.com")
+    |> subject("Ocorrência de não conformidade")
+    |> put_text_layout({NorteWeb.EmailView, "event_alert.text"})
+    |> render("event_alert.text",
+      item_key: event.item_key,
+      item_name: event.item_name,
+      text: event.text,
+      unit_key: event.unit_key,
+      unit_name: event.unit_name,
+      uid: event.uid,
+      event_date: event.event_date
+    )
+  end
+
+  def alert_event_email(email_address, event) do
+    email_address
+    |> alert_event_text_email(event)
+    |> put_html_layout({NorteWeb.EmailView, "event_alert.html"})
+    |> render("event_alert.html",
+      item_key: event.item_key,
+      item_name: event.item_name,
+      text: event.text,
+      unit_key: event.unit_key,
+      unit_name: event.unit_name,
+      uid: event.uid,
+      event_date: event.event_date
+    )
+  end
 end

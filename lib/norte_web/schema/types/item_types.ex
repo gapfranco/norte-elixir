@@ -45,6 +45,7 @@ defmodule NorteWeb.Schema.Types.ItemTypes do
     field :client, :client_type, resolve: dataloader(Clients)
     field :unit, :unit_type, resolve: dataloader(Norte.Base)
     field :user, :user_type, resolve: dataloader(Users)
+    field :alert_user, :user_type, resolve: dataloader(Users)
   end
 
   @desc "Mappings list paginated"

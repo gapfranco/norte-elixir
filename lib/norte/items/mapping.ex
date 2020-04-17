@@ -10,9 +10,11 @@ defmodule Norte.Items.Mapping do
     field :item_key, :string, virtual: true
     field :unit_key, :string, virtual: true
     field :user_key, :string, virtual: true
+    field :alert_user_key, :string, virtual: true
     belongs_to(:item, Norte.Items.Item)
     belongs_to(:unit, Norte.Base.Unit)
     belongs_to(:user, Norte.Accounts.User)
+    belongs_to(:alert_user, Norte.Accounts.User, foreign_key: :alert_user_id)
     belongs_to(:client, Norte.Accounts.Client)
 
     timestamps()
@@ -21,11 +23,22 @@ defmodule Norte.Items.Mapping do
   @doc false
   def changeset(mapping, attrs) do
     mapping
-    |> cast(attrs, [:item_id, :item_key, :unit_id, :unit_key, :user_id, :user_key, :client_id])
+    |> cast(attrs, [
+      :item_id,
+      :item_key,
+      :unit_id,
+      :unit_key,
+      :user_id,
+      :user_key,
+      :client_id,
+      :alert_user_key,
+      :alert_user_id
+    ])
     |> validate_required([:item_key, :unit_key, :user_key])
     |> get_item(attrs.client_id)
     |> get_unit(attrs.client_id)
     |> get_user(attrs.client_id)
+    |> get_user_alert(attrs.client_id)
     |> unique_constraint(:unit_id, name: :mappings_units_index)
   end
 
@@ -79,4 +92,21 @@ defmodule Norte.Items.Mapping do
   end
 
   defp get_user(changeset, _), do: changeset
+
+  defp get_user_alert(%Ecto.Changeset{changes: %{alert_user_key: id}} = changeset, client_id) do
+    id =
+      case id do
+        "null" ->
+          nil
+
+        _ ->
+          reg = Accounts.get_user_uid(id, client_id)
+          reg.id
+      end
+
+    changeset
+    |> put_change(:alert_user_id, id)
+  end
+
+  defp get_user_alert(changeset, _), do: changeset
 end

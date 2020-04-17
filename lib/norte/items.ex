@@ -156,6 +156,7 @@ defmodule Norte.Items do
         item_id: mapping.item_id,
         unit_id: mapping.unit_id,
         user_id: mapping.user_id,
+        alert_user_id: mapping.alert_user_id,
         client_id: mapping.client_id,
         date_due: date
       }

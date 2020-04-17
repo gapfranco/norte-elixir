@@ -1,0 +1,20 @@
+
+<h3>Ocorrência de não conformidade</h3>
+
+<h4>NOME</h4>
+<p><%= @item_key%> - <%= @item_name%></p>
+
+<h4>UNIDADE</h4>
+<p><%= @unit_key%> - <%= @unit_name%></p>
+
+<h4>RESPONSÁVEL</h4>
+<p><%= @uid%></p>
+
+<h4>DATA</h4>
+<p><%= @event_date%></p>
+
+<h4>DESCRIÇÃO</h4>
+<p>
+<%= @text%>
+</p>
+

@@ -33,10 +33,17 @@ defmodule Norte.Ratings do
 
         from q in query,
           where:
-            ilike(q.result, ^pattern) or
-              ilike(q.uid, ^pattern) or
+            ilike(q.uid, ^pattern) or
               ilike(q.item_key, ^pattern) or
-              ilike(q.unit_key, ^pattern)
+              ilike(q.item_name, ^pattern) or
+              ilike(q.unit_key, ^pattern) or
+              ilike(q.unit_name, ^pattern) or
+              ilike(q.risk_key, ^pattern) or
+              ilike(q.area_key, ^pattern) or
+              ilike(q.process_key, ^pattern) or
+              ilike(q.risk_name, ^pattern) or
+              ilike(q.area_name, ^pattern) or
+              ilike(q.process_name, ^pattern)
 
         # or
         #   ilike(q.key, ^pattern)
@@ -49,12 +56,12 @@ defmodule Norte.Ratings do
         order_by: [desc: a.date_due, desc: a.id],
         where: a.client_id == ^client_id and a.user_id == ^user_id
 
-    Pagination.paginate(query, criteria, :date_due, &filter_with/2)
+    Pagination.paginate(query, criteria, :date_due, &filter_with_all/2)
   end
 
-  defp filter_with(_filters, query) do
-    query
-  end
+  # defp filter_with(_filters, query) do
+  #   query
+  # end
 
   def get_rating(id, client_id) do
     q = from a in Rating, where: a.id == ^id and a.client_id == ^client_id
