@@ -91,7 +91,7 @@ defmodule Norte.Ratings.Rating do
 
   defp check_area(attrs) do
     case Map.fetch(attrs, :area_id) do
-      {:ok, id} ->
+      {:ok, id} when not is_nil(id) ->
         reg = Areas.get_area(id)
 
         attrs
@@ -105,7 +105,7 @@ defmodule Norte.Ratings.Rating do
 
   defp check_risk(attrs) do
     case Map.fetch(attrs, :risk_id) do
-      {:ok, id} ->
+      {:ok, id} when not is_nil(id) ->
         reg = Risks.get_risk(id)
 
         attrs
@@ -119,7 +119,7 @@ defmodule Norte.Ratings.Rating do
 
   defp check_process(attrs) do
     case Map.fetch(attrs, :process_id) do
-      {:ok, id} ->
+      {:ok, id} when not is_nil(id) ->
         reg = Processes.get_process(id)
 
         attrs
