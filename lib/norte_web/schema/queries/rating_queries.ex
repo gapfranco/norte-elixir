@@ -31,5 +31,19 @@ defmodule NorteWeb.Schema.Queries.RatingQueries do
       middleware(Middleware.Authorize, :any)
       resolve(&Resolvers.RatingResolvers.get_rating/3)
     end
+
+    @desc "Report on ratings"
+    field :ratings_report, list_of(:rating_type) do
+      arg(:date_ini, :date)
+      arg(:date_end, :date)
+      arg(:item, :string)
+      arg(:unit, :string)
+      arg(:user, :string)
+      arg(:area, :string)
+      arg(:risk, :string)
+      arg(:process, :string)
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.RatingResolvers.ratings_report/3)
+    end
   end
 end

@@ -42,4 +42,9 @@ defmodule NorteWeb.Schema.Types.RatingTypes do
     field(:page, :integer)
     field(:list, list_of(:rating_type))
   end
+
+  # @desc "Ratings list"
+  # object :ratings_list do
+  #   field(:list, list_of(:rating_type))
+  # end
 end

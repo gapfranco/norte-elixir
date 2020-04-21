@@ -58,4 +58,8 @@ defmodule NorteWeb.Schema.Resolvers.RatingResolvers do
       end
     end
   end
+
+  def ratings_report(_, args, %{context: context}) do
+    {:ok, Ratings.report_ratings(context.current_user.client_id, args)}
+  end
 end

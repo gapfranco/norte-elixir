@@ -104,6 +104,48 @@ defmodule Norte.Ratings do
     Rating.changeset(rating, %{})
   end
 
+  def report_ratings(client_id, criteria) do
+    query =
+      from a in Rating,
+        order_by: [a.item_key, a.unit_key, a.date_due],
+        where: a.client_id == ^client_id
+
+    Enum.reduce(criteria, query, fn
+      {:date_ini, date_ini}, query ->
+        from q in query,
+          where: q.date_due >= ^date_ini
+
+      {:date_end, date_end}, query ->
+        from q in query,
+          where: q.date_due <= ^date_end
+
+      {:item, item}, query ->
+        from q in query,
+          where: q.item_key == ^item
+
+      {:unit, unit}, query ->
+        from q in query,
+          where: q.unit_key == ^unit
+
+      {:user, user}, query ->
+        from q in query,
+          where: q.uid == ^user
+
+      {:area, area}, query ->
+        from q in query,
+          where: q.area_key == ^area
+
+      {:risk, risk}, query ->
+        from q in query,
+          where: q.risk_key == ^risk
+
+      {:process, process}, query ->
+        from q in query,
+          where: q.process_key == ^process
+    end)
+    |> Repo.all()
+  end
+
   # Dataloader
 
   def datasource() do
