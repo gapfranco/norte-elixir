@@ -14,3 +14,5 @@ Para testar localmente:
 - Iniciar o endpoint Phoenix com `mix phx.server`
 
 Pode acessar o endpoint graphQL com [`localhost:4000/graphiql`](http://localhost:4000/graphiql) com browser.
+
+O projeto react norte-elixir-cli é um protótipo de cliente para esta API.
