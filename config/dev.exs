@@ -2,10 +2,11 @@ use Mix.Config
 
 # Configure your database
 config :norte, Norte.Repo,
-  username: "gapfranco",
-  password: "",
-  database: "norte_dev",
+  username: "postgres",
+  password: "docker",
+  database: "norte-elixir-dev",
   hostname: "localhost",
+  port: 5433,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
