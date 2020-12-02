@@ -1,20 +1,15 @@
 # Norte
 
-To start your Phoenix server:
+Implementação da API para o sistema Norte (compliance e risco)
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+Usando Elixir e GraphQL via Absinthe.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Para testar localmente:
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+- Ajustar os parâmetros de banco de dados e de envio de e-mail em config/dev.exs
+- Instalar dependências com `mix deps.get`
+- Criar e migrar o banco de dados com `mix ecto.setup`
+- Instalar dependências Node.js com `cd assets && npm install`, se necessário
+- Iniciar o endpoint Phoenix com `mix phx.server`
 
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+Pode acessar o endpoint graphQL com [`localhost:4000`](http://localhost:4000/graphiql) com browser.
